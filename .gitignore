@@ -1,0 +1,8 @@
+# Virtual enviroment
+.env
+/.env
+
+
+# Ignorar todos os arquivos PDF
+*.pdf
+**/*.pdf
