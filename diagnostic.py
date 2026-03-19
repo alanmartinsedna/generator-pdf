@@ -1,6 +1,8 @@
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
 # =========================
 # UTILIDADES
@@ -33,15 +35,126 @@ def interpolate_color(c1, c2, t):
     )
 
 # =========================
-# GRADIENTE
+# FUNÇÃO DE TEXTO COM (CORREÇÃO TOP-LEFT)
 # =========================
+def draw_text(
+        pdf,
+        x,
+        y,
+        text,
+        size=12,
+        font="Helvetica",
+        weight=400,
+        color=colors.black,
+        align="left"
+    ):
+    pdf.saveState()
+
+    pdf.translate(x, y)
+    pdf.scale(1, -1)
+
+    # =========================
+    # 🎨 COR
+    # =========================
+    def parse_color(c):
+        if isinstance(c, str) and c.startswith("#"):
+            c = c.lstrip("#")
+            r = int(c[0:2], 16) / 255
+            g = int(c[2:4], 16) / 255
+            b = int(c[4:6], 16) / 255
+            return colors.Color(r, g, b)
+
+        if isinstance(c, str):
+            return getattr(colors, c, colors.black)
+
+        if isinstance(c, tuple):
+            if len(c) == 4:
+                r, g, b, a = c
+            else:
+                r, g, b = c
+                a = 1
+
+            if max(r, g, b) > 1:
+                r /= 255
+                g /= 255
+                b /= 255
+
+            return colors.Color(r, g, b, alpha=a)
+
+        return c
+
+    pdf.setFillColor(parse_color(color))
+
+    # =========================
+    # 🔠 FONTE DINÂMICA
+    # =========================
+    def resolve_font(font_name, weight):
+        """
+        Tenta encontrar variações da fonte automaticamente:
+        Ex:
+        MinhaFonte → MinhaFonte-Bold
+        """
+
+        if weight >= 600:
+            bold_name = f"{font_name}-Bold"
+
+            if bold_name in pdfmetrics.getRegisteredFontNames():
+                return bold_name
+
+        return font_name
+
+    font_name = resolve_font(font, weight)
+
+    # valida se fonte existe
+    if font_name not in pdfmetrics.getRegisteredFontNames():
+        raise ValueError(f"Fonte '{font_name}' não registrada no ReportLab.")
+
+    pdf.setFont(font_name, size)
+
+    # =========================
+    # 📐 ALINHAMENTO
+    # =========================
+    text_width = pdf.stringWidth(text, font_name, size)
+
+    if align == "center":
+        x_offset = -text_width / 2
+    elif align == "right":
+        x_offset = -text_width
+    else:
+        x_offset = 0
+
+    # =========================
+    # 🖊️ DESENHO
+    # =========================
+    pdf.drawString(x_offset, -size, text)
+
+    pdf.restoreState()
 
 '''
-Monta o gradiente de fundo
-👉 Quantidade de “fatias” do gradiente
-mais steps → mais suave
-menos steps → mais “faixas visíveis”
+    # 👇 USO DO HELPER (CORRETO)
+    draw_text(pdf, 50, 80, "Texto padrão")
+    draw_text(pdf, 50, 120, "Texto azul", color="#596CFF")
+    draw_text(pdf, 50, 160, "Texto vermelho", color="red")
+    draw_text(pdf, 50, 200, "RGB 255", color=(255, 0, 0))
+    draw_text(pdf, 50, 240, "RGBA", color=(0, 0, 255, 0.5))
+    draw_text(pdf, 50, 280, "Grande", size=22)
+    draw_text(pdf, 50, 320, "Pequeno", size=8)
+    draw_text(pdf, 50, 360, "Normal", weight=400)
+    draw_text(pdf, 50, 400, "Negrito", weight=700)
+    draw_text(pdf, 50, 360, "Normal", weight=400)
+    draw_text(pdf, 50, 400, "Negrito", weight=700)
+    draw_text(pdf, 300, 520, "Esquerda", align="left")
+    draw_text(pdf, 300, 560, "Centralizado", align="center")
+    draw_text(pdf,x=300,y=650,text="Diagnóstico de Riscos 1",size=20,font="Helvetica",weight=700,color="#596CFF",align="center")
+    draw_text(pdf,x=300,y=675,text="Diagnóstico de Riscos 2",size=20,font="Helvetica",weight=700,color="#596CFF",align="center")
+    draw_text(pdf,50,700,"Título Principal",size=24,weight=700,color="#1A1A1A")
+    draw_text(pdf,50,740,"Subtítulo explicativo",size=14,color=(120, 120, 120))
+    draw_text(pdf,x=400,y=780,text="Texto avançado RGBA + alinhado",size=16,font="Helvetica",weight=700,color=(255, 100, 50, 0.7),align="right")
 '''
+
+# =========================
+# GRADIENTE
+# =========================
 
 def draw_css_gradient(pdf, width, height):
     steps = 300
@@ -74,23 +187,20 @@ def draw_css_gradient(pdf, width, height):
         pdf.rect(horizontal_position, 0, width / steps + 2, height, stroke=0, fill=1)
 
 # =========================
-# IMAGENS
+# IMAGENS (AJUSTADAS PARA TOP-LEFT)
 # =========================
 
-'''
-👉 Responsável por desenhar as imagens do fundo
-'''
-
 def draw_images(pdf, width, height):
+    scale_factor = 0.35
+
     # -------------------------
     # IMG 1 (top-right)
     # -------------------------
-    scale_factor = 0.35
     img1_width = px_to_pt(883 * scale_factor)
     img1_height = px_to_pt(1175 * scale_factor)
 
     x1 = width - img1_width + px_to_pt(62)
-    y1 = height - img1_height + px_to_pt(140)
+    y1 = -px_to_pt(260)
 
     pdf.drawImage(
         "bg-img-1.png",
@@ -102,15 +212,13 @@ def draw_images(pdf, width, height):
     )
 
     # -------------------------
-    # IMG 2 (bottom-left) ✅ CORRIGIDO
+    # IMG 2 (bottom-left)
     # -------------------------
     img2_width = px_to_pt(1598 * scale_factor)
     img2_height = px_to_pt(1825 * scale_factor)
 
     x2 = -px_to_pt(290)
-
-    # 👇 AJUSTE PRINCIPAL AQUI
-    y2 = -img2_height + px_to_pt(300)
+    y2 = height - img2_height + px_to_pt(380)
 
     pdf.drawImage(
         "bg-img-2.png",
@@ -129,18 +237,28 @@ pdf = canvas.Canvas("Relatorio-Diagnostico.pdf", pagesize=A4)
 
 width, height = A4
 
-draw_css_gradient(pdf, width, height)
+# 🔥 SISTEMA GLOBAL TOP-LEFT
+pdf.translate(0, height)
+pdf.scale(1, -1)
 
+# =========================
+# FUNDO
+# =========================
+
+draw_css_gradient(pdf, width, height)
 draw_images(pdf, width, height)
 
 # =======================================================================================
 # "------------⬇️------ INICIO DO BLOCO PARA CONTEUDO DO RELATORIO ------⬇️------------"
 
 '''
-👉 O que vem depois fica por cima.
+👉 Agora você trabalha como se fosse CSS:
 
-OBSERVAÇÃO
+(0,0) = topo esquerdo
+X → direita
+Y → baixo
 '''
+
 
 
 # "------------⬆️-------- FIM DO BLOCO PARA CONTEUDO DO RELATORIO -------⬆️------------"
