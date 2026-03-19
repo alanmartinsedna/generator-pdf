@@ -3,7 +3,19 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.platypus import Flowable, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 
+import json
+
+def carregar_json(caminho):
+    with open(caminho, "r", encoding="utf-8") as f:
+        return json.load(f)
+    
+data_json = carregar_json("data.json")
+
+print('RETORNO JSON', json.dumps(data_json, indent=4))
+    
 # =========================
 # UTILIDADES
 # =========================
@@ -322,6 +334,28 @@ Y → baixo
 '''
 
 draw_logo_image(pdf,"logo-edna-center.png",y=20,width=100,height=48,align="center")
+draw_text(pdf,x=20,y=80,text="Diagnóstico de Riscos Psicossociais",size=20,font="Helvetica",weight=700,color="#596CFF",align="left")
+draw_text(pdf,x=20,y=110,text="Grupo Agulhas Negras - Agulhas Negras",size=7,font="Helvetica",weight=400,color="#344767",align="left")
+# =========================
+# CONFIG DO RETÂNGULO
+# =========================
+rect_width = px_to_pt(302)
+rect_height = px_to_pt(18)
+radius = rect_height / 2  # 👈 deixa as laterais arredondadas (pill)
+
+# =========================
+# DESENHO
+# =========================
+pdf.setFillColor(colors.HexColor("#596cff"))
+pdf.roundRect(20,130,rect_width,rect_height,radius,fill=1,stroke=0)
+
+draw_text(pdf,x=40,y=132,text="Respostas entre 11/03/2026 e 19/03/2026",size=7,font="Helvetica",weight=700,color="#ffffff",align="left")
+
+rect_width_2 = 595.27
+rect_height_2 = px_to_pt(36)
+pdf.setFillColor(colors.HexColor("#e9ecef"))
+pdf.roundRect(0,180,rect_width_2,rect_height_2,0,fill=1,stroke=0)
+draw_text(pdf,x=20,y=186,text="Aderencia da participação",size=12,font="Helvetica",weight=700,color="#596CFF",align="left")
 
 # "------------⬆️-------- FIM DO BLOCO PARA CONTEUDO DO RELATORIO -------⬆️------------"
 # =======================================================================================
