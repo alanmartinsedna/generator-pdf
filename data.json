@@ -99,6 +99,38 @@
                         }
 
                     ]
+                },
+                {
+                    "groupName":"MECÂNICA",
+                    "peopleGroup":{
+                        "groupId":"c5ec4e92-0d86-4619-9ffe-c5ece6ed6173",
+                        "totalPeople": 123,
+                        "answered": 59,
+                        "notAnswered": 64
+                    },
+                    "answersGroupName":[
+                        {
+                            "groupNameAnswer":"1. ORGANIZAÇÃO DAS DEMANDAS",
+                            "groupNameId":"70ae62fa-82c5-47e3-9332-0d32775a4e79",
+                            "finalAverage":0.12
+                        },
+                        {
+                            "groupNameAnswer":"2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                            "groupNameId":"9d7d7484-0d52-4e3f-afe0-0007ec95ab17",
+                            "finalAverage":0.22
+                        },
+                        {
+                            "groupNameAnswer":"3. SUPORTE E RECURSOS",
+                            "groupNameId":"6db3c56b-7adf-444a-b378-f53270f059bc",
+                            "finalAverage":0.04
+                        },
+                        {
+                            "groupNameAnswer":"4. RELAÇÕES PROFISSIONAIS",
+                            "groupNameId":"53cb25f9-8408-420b-8aa9-3b15fbd778d1",
+                            "finalAverage":0.0
+                        }
+
+                    ]
                 }
             ]
         }
