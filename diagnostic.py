@@ -131,7 +131,7 @@ def draw_text(
     pdf.restoreState()
 
 '''
-    # 👇 USO DO HELPER (CORRETO)
+    # 👇 USO DO HELPER (CORRETO) - DA FUNÇÃO def draw_text()
     draw_text(pdf, 50, 80, "Texto padrão")
     draw_text(pdf, 50, 120, "Texto azul", color="#596CFF")
     draw_text(pdf, 50, 160, "Texto vermelho", color="red")
@@ -151,6 +151,68 @@ def draw_text(
     draw_text(pdf,50,740,"Subtítulo explicativo",size=14,color=(120, 120, 120))
     draw_text(pdf,x=400,y=780,text="Texto avançado RGBA + alinhado",size=16,font="Helvetica",weight=700,color=(255, 100, 50, 0.7),align="right")
 '''
+
+# =========================
+# LOGO COMPANY
+# =========================
+
+def draw_logo_image(
+        pdf,
+        image_path,
+        x=None,
+        y=0,
+        width=100,
+        height=50,
+        page_width=None,
+        align="left"
+    ):
+    pdf.saveState()
+
+    # =========================
+    # SISTEMA TOP-LEFT (corrigir imagem)
+    # =========================
+    pdf.translate(0, 0)
+    pdf.scale(1, -1)
+
+    # =========================
+    # LARGURA DA PÁGINA
+    # =========================
+    if page_width is None:
+        page_width = pdf._pagesize[0]
+
+    # =========================
+    # 📐 LÓGICA DE ALINHAMENTO
+    # =========================
+    if x is None:
+        if align == "center":
+            x = (page_width - width) / 2
+        elif align == "right":
+            x = page_width - width
+        else:  # left
+            x = 0
+
+    # =========================
+    # 🖼️ DESENHO DA IMAGEM
+    # =========================
+    pdf.drawImage(
+        image_path,
+        x,
+        -y - height,   # 👈 correção top-left
+        width=width,
+        height=height,
+        mask='auto'
+    )
+
+    pdf.restoreState()
+
+    '''
+         # 👇 USO DO HELPER (CORRETO) - DA FUNÇÃO def draw_logo_image()
+        draw_logo_image(pdf,"logo-edna-center.png",x=50,y=50,width=100,height=48)
+        draw_logo_image(pdf,"logo-edna-center.png",x=None,y=150,width=100,height=48,align="left")
+        draw_logo_image(pdf,"logo-edna-center.png",y=200,width=100,height=48,align="center")
+        draw_logo_image(pdf,"logo-edna-center.png",y=250,width=100,height=48,align="right")
+    '''
+
 
 # =========================
 # GRADIENTE
@@ -259,7 +321,7 @@ X → direita
 Y → baixo
 '''
 
-
+draw_logo_image(pdf,"logo-edna-center.png",y=20,width=100,height=48,align="center")
 
 # "------------⬆️-------- FIM DO BLOCO PARA CONTEUDO DO RELATORIO -------⬆️------------"
 # =======================================================================================
