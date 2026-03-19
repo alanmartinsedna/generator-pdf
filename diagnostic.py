@@ -3,7 +3,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import Flowable, Paragraph
+from reportlab.platypus import Flowable, Paragraph, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
 
 import json
@@ -13,8 +13,6 @@ def carregar_json(caminho):
         return json.load(f)
     
 data_json = carregar_json("data.json")
-
-print('RETORNO JSON', json.dumps(data_json, indent=4))
     
 # =========================
 # UTILIDADES
@@ -267,13 +265,15 @@ def draw_css_gradient(pdf, width, height):
 def draw_images(pdf, width, height):
     scale_factor = 0.35
 
-    # -------------------------
+    # -------------------------Q
     # IMG 1 (top-right)
     # -------------------------
     img1_width = px_to_pt(883 * scale_factor)
     img1_height = px_to_pt(1175 * scale_factor)
 
     x1 = width - img1_width + px_to_pt(62)
+
+    # 👇 AGORA top-left → não precisa inverter com height
     y1 = -px_to_pt(260)
 
     pdf.drawImage(
@@ -282,6 +282,7 @@ def draw_images(pdf, width, height):
         y1,
         width=img1_width,
         height=img1_height,
+
         mask='auto'
     )
 
@@ -292,6 +293,8 @@ def draw_images(pdf, width, height):
     img2_height = px_to_pt(1825 * scale_factor)
 
     x2 = -px_to_pt(290)
+
+    # 👇 agora Y cresce pra baixo
     y2 = height - img2_height + px_to_pt(380)
 
     pdf.drawImage(
@@ -304,6 +307,115 @@ def draw_images(pdf, width, height):
     )
 
 # =========================
+# FUNÇÃO draw table
+# =========================
+
+def draw_table(pdf, data, x, y, table_width):
+
+    num_cols = len(data[0])
+
+    col_widths = [
+        table_width * 0.30,
+        table_width * 0.15,
+        table_width * 0.15,
+        table_width * 0.20,
+        table_width * 0.20,
+    ]
+
+    if len(col_widths) != num_cols:
+        col_widths = [table_width / num_cols] * num_cols
+
+    table = Table(data, colWidths=col_widths)
+
+    style = TableStyle([
+        # =========================
+        # HEADER
+        # =========================
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#596CFF")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+
+        # =========================
+        # BODY
+        # =========================
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 8),
+
+        # =========================
+        # ALINHAMENTO
+        # =========================
+        ('ALIGN', (1, 1), (-1, -1), 'CENTER'),
+        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+
+        # =========================
+        # GRID
+        # =========================
+        ('GRID', (0, 0), (-1, -1), 0.3, colors.HexColor("#596CFF")),
+    ])
+
+    table.setStyle(style)
+
+    table.wrapOn(pdf, 0, 0)
+    table_height = table._height
+
+    # 🔥 CORREÇÃO (NÃO REMOVER)
+    pdf.saveState()
+
+    pdf.scale(1, -1)
+    pdf.translate(0, -pdf._pagesize[1])
+
+    table.drawOn(pdf, x, pdf._pagesize[1] - y - table_height)
+
+    pdf.restoreState()
+
+    return table_height
+
+# =========================
+# FUNÇÃO DE DESENHAR A TABELA
+# =========================
+
+def montar_tabela_publico(json_data):
+    table_data = [
+        [
+            "Grupo",
+            "Total",
+            "Respondidas",
+            "Não Respondidas",
+            "Aderência (%)"
+        ]
+    ]
+
+    for report in json_data.get("reportData", []):
+        for group in report.get("public_groups", []):
+
+            group_name = group.get("groupName", "")
+
+            people = group.get("peopleGroup", {})
+            total = people.get("totalPeople", 0)
+            answered = people.get("answered", 0)
+            not_answered = people.get("notAnswered", 0)
+
+            if total > 0:
+                adherence = (answered / total) * 100
+                adherence = f"{adherence:.1f}%"
+            else:
+                adherence = "0%"
+
+            styles = getSampleStyleSheet()
+            style_normal = styles["Normal"]
+
+            table_data.append([
+                Paragraph(str(group_name), style_normal),
+                Paragraph(str(total), style_normal),
+                Paragraph(str(answered), style_normal),
+                Paragraph(str(not_answered), style_normal),
+                Paragraph(str(adherence), style_normal),
+            ])
+
+    return table_data
+
+# =========================
 # EXECUÇÃO
 # =========================
 
@@ -311,7 +423,7 @@ pdf = canvas.Canvas("Relatorio-Diagnostico.pdf", pagesize=A4)
 
 width, height = A4
 
-# 🔥 SISTEMA GLOBAL TOP-LEFT
+# 🔥 AQUI ESTÁ A MUDANÇA GLOBAL
 pdf.translate(0, height)
 pdf.scale(1, -1)
 
@@ -336,16 +448,11 @@ Y → baixo
 draw_logo_image(pdf,"logo-edna-center.png",y=20,width=100,height=48,align="center")
 draw_text(pdf,x=20,y=80,text="Diagnóstico de Riscos Psicossociais",size=20,font="Helvetica",weight=700,color="#596CFF",align="left")
 draw_text(pdf,x=20,y=110,text="Grupo Agulhas Negras - Agulhas Negras",size=7,font="Helvetica",weight=400,color="#344767",align="left")
-# =========================
-# CONFIG DO RETÂNGULO
-# =========================
+
 rect_width = px_to_pt(302)
 rect_height = px_to_pt(18)
-radius = rect_height / 2  # 👈 deixa as laterais arredondadas (pill)
+radius = rect_height / 2
 
-# =========================
-# DESENHO
-# =========================
 pdf.setFillColor(colors.HexColor("#596cff"))
 pdf.roundRect(20,130,rect_width,rect_height,radius,fill=1,stroke=0)
 
@@ -355,7 +462,18 @@ rect_width_2 = 595.27
 rect_height_2 = px_to_pt(36)
 pdf.setFillColor(colors.HexColor("#e9ecef"))
 pdf.roundRect(0,180,rect_width_2,rect_height_2,0,fill=1,stroke=0)
+
 draw_text(pdf,x=20,y=186,text="Aderencia da participação",size=12,font="Helvetica",weight=700,color="#596CFF",align="left")
+
+table_data = montar_tabela_publico(data_json)
+
+draw_table(
+    pdf,
+    data=table_data,
+    x=20,
+    y=220,
+    table_width=555
+)
 
 # "------------⬆️-------- FIM DO BLOCO PARA CONTEUDO DO RELATORIO -------⬆️------------"
 # =======================================================================================
