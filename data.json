@@ -10,7 +10,8 @@
                         "groupId":"868ea1bf-4d5b-4a9d-bc20-9ad6627ccc28",
                         "totalPeople": 120,
                         "answered": 95,
-                        "notAnswered": 25
+                        "notAnswered": 25,
+                        "avarageGroup":0.4425
                     },
                     "answersGroupName":[
                         {
@@ -42,13 +43,14 @@
                         "groupId":"caf05787-abad-4bd3-b6f8-a9fcb8ccf823",
                         "totalPeople": 10,
                         "answered": 5,
-                        "notAnswered": 5
+                        "notAnswered": 5,
+                        "avarageGroup":0.28
                     },
                     "answersGroupName":[
                         {
                             "groupNameAnswer":"1. ORGANIZAÇÃO DAS DEMANDAS",
                             "groupNameId":"0f75705d-a518-4ef2-b51e-ad24ae6803b7",
-                            "finalAverage":0.95
+                            "finalAverage":0.15
                         },
                         {
                             "groupNameAnswer":"2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
@@ -74,18 +76,19 @@
                         "groupId":"e6ed6173-0d86-4619-9ffe-c5ec4e921b28",
                         "totalPeople": 33,
                         "answered": 5,
-                        "notAnswered": 28
+                        "notAnswered": 28,
+                        "avarageGroup":0.7825
                     },
                     "answersGroupName":[
                         {
                             "groupNameAnswer":"1. ORGANIZAÇÃO DAS DEMANDAS",
                             "groupNameId":"70ae62fa-82c5-47e3-9332-0d32775a4e79",
-                            "finalAverage":0.1
+                            "finalAverage":0.7
                         },
                         {
                             "groupNameAnswer":"2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
                             "groupNameId":"9d7d7484-0d52-4e3f-afe0-0007ec95ab17",
-                            "finalAverage":0.44
+                            "finalAverage":1.0
                         },
                         {
                             "groupNameAnswer":"3. SUPORTE E RECURSOS",
@@ -106,7 +109,8 @@
                         "groupId":"c5ec4e92-0d86-4619-9ffe-c5ece6ed6173",
                         "totalPeople": 93,
                         "answered": 29,
-                        "notAnswered": 64
+                        "notAnswered": 64,
+                        "avarageGroup":0.095
                     },
                     "answersGroupName":[
                         {
@@ -128,6 +132,38 @@
                             "groupNameAnswer":"4. RELAÇÕES PROFISSIONAIS",
                             "groupNameId":"53cb25f9-8408-420b-8aa9-3b15fbd778d1",
                             "finalAverage":0.0
+                        }
+                    ]
+                },
+                {
+                    "groupName":"TRANSPORTE",
+                    "peopleGroup":{
+                        "groupId":"c5ec4e92-0d86-4619-9ffe-c5ece6ed6173",
+                        "totalPeople": 193,
+                        "answered": 140,
+                        "notAnswered": 53,
+                        "avarageGroup":0.925
+                    },
+                    "answersGroupName":[
+                        {
+                            "groupNameAnswer":"1. ORGANIZAÇÃO DAS DEMANDAS",
+                            "groupNameId":"70ae62fa-82c5-47e3-9332-0d32775a4e79",
+                            "finalAverage":1.0
+                        },
+                        {
+                            "groupNameAnswer":"2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                            "groupNameId":"9d7d7484-0d52-4e3f-afe0-0007ec95ab17",
+                            "finalAverage":1.0
+                        },
+                        {
+                            "groupNameAnswer":"3. SUPORTE E RECURSOS",
+                            "groupNameId":"6db3c56b-7adf-444a-b378-f53270f059bc",
+                            "finalAverage":1
+                        },
+                        {
+                            "groupNameAnswer":"4. RELAÇÕES PROFISSIONAIS",
+                            "groupNameId":"53cb25f9-8408-420b-8aa9-3b15fbd778d1",
+                            "finalAverage":0.7
                         }
                     ]
                 }
