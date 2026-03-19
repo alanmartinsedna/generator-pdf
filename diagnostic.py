@@ -416,6 +416,31 @@ def montar_tabela_publico(json_data):
     return table_data
 
 # =========================
+# FUNÇÃO CALCULO MEDIA GERAL DE ADERENCIA
+# =========================
+
+def calc_global_adherence_average(json_data):
+    total_people_sum = 0
+    total_answered_sum = 0
+
+    for report in json_data.get("reportData", []):
+        public_groups = report.get("public_groups", [])
+        for group in public_groups:
+            people = group.get("peopleGroup", {})
+            total = people.get("totalPeople", 0)
+            answered = people.get("answered", 0)
+            total_people_sum += total
+            total_answered_sum += answered
+
+    if total_people_sum == 0:
+        raise Exception("Erro: total de pessoas é zero.")
+
+    global_adherence = (total_answered_sum / total_people_sum) * 100
+    formated_adherence = f"Média geral da aderência de participação {global_adherence:.1f}%"
+    return formated_adherence
+
+
+# =========================
 # EXECUÇÃO
 # =========================
 
@@ -474,6 +499,8 @@ draw_table(
     y=220,
     table_width=555
 )
+
+draw_text(pdf,x=20,y=330,text=calc_global_adherence_average(data_json),size=16,font="Helvetica",weight=700,color="#596CFF",align="left")
 
 # "------------⬆️-------- FIM DO BLOCO PARA CONTEUDO DO RELATORIO -------⬆️------------"
 # =======================================================================================
