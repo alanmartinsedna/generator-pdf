@@ -439,6 +439,34 @@ def calc_global_adherence_average(json_data):
     formated_adherence = f"Média geral da aderência de participação {global_adherence:.1f}%"
     return formated_adherence
 
+# =========================
+# FUNÇÃO CALCULO MEDIA GERAL DO DIAGNOSTICO
+# =========================
+
+def calc_global_diagnostic_average(json_data):
+    total_avarage_sum = 0
+
+    for report in json_data.get("reportData", []):
+        public_groups = report.get("public_groups", [])
+        quantity_groups = len(public_groups)
+        print(f'quantity_groups = {quantity_groups}')
+        for group in public_groups:
+            people = group.get("peopleGroup", {})
+            print(f'people = {people}')
+            total_avarage_group = people.get("avarageGroup", 0)
+            total_avarage_sum += total_avarage_group
+
+    if quantity_groups < 0:
+        raise Exception("Erro: total de GRUPOS é MENOR OU IGUAL a zero.")
+    
+    total_avarage_result = ((total_avarage_sum / quantity_groups) * 100)
+    print(f"total_avarage_result = {total_avarage_result}")
+
+    formated_total_avarage_result = f"{total_avarage_result:.1f}%"
+    print(f"formated_total_avarage_result = {formated_total_avarage_result}")
+
+    return total_avarage_result
+
 
 # =========================
 # EXECUÇÃO
@@ -500,7 +528,11 @@ draw_table(
     table_width=555
 )
 
-draw_text(pdf,x=20,y=330,text=calc_global_adherence_average(data_json),size=16,font="Helvetica",weight=700,color="#596CFF",align="left")
+draw_text(pdf,x=20,y=340,text=calc_global_adherence_average(data_json),size=16,font="Helvetica",weight=700,color="#596CFF",align="left")
+
+calc_global_diagnostic_average(data_json)
+
+
 
 # "------------⬆️-------- FIM DO BLOCO PARA CONTEUDO DO RELATORIO -------⬆️------------"
 # =======================================================================================
