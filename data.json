@@ -82,7 +82,7 @@
                     "answersGroupName":[
                         {
                             "groupNameAnswer":"1. ORGANIZAÇÃO DAS DEMANDAS",
-                            "groupNameId":"70ae62fa-82c5-47e3-9332-0d32775a4e79",
+                            "groupNameId":"7023fd98-6ba4-4402-90b2-0ce816133ce1",
                             "finalAverage":0.7
                         },
                         {
@@ -115,22 +115,22 @@
                     "answersGroupName":[
                         {
                             "groupNameAnswer":"1. ORGANIZAÇÃO DAS DEMANDAS",
-                            "groupNameId":"70ae62fa-82c5-47e3-9332-0d32775a4e79",
+                            "groupNameId":"445bbc38-df30-449e-af8c-dde99de05d55",
                             "finalAverage":0.12
                         },
                         {
                             "groupNameAnswer":"2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
-                            "groupNameId":"9d7d7484-0d52-4e3f-afe0-0007ec95ab17",
+                            "groupNameId":"6a3bc356-63f1-42c9-b872-b93ab034c336",
                             "finalAverage":0.22
                         },
                         {
                             "groupNameAnswer":"3. SUPORTE E RECURSOS",
-                            "groupNameId":"6db3c56b-7adf-444a-b378-f53270f059bc",
+                            "groupNameId":"e7ff994f-7289-4d0e-971c-3ae83a37d06e",
                             "finalAverage":0.04
                         },
                         {
                             "groupNameAnswer":"4. RELAÇÕES PROFISSIONAIS",
-                            "groupNameId":"53cb25f9-8408-420b-8aa9-3b15fbd778d1",
+                            "groupNameId":"ec34fd4f-2559-4a6a-8394-5ba58e46b0c2",
                             "finalAverage":0.0
                         }
                     ]
@@ -138,7 +138,7 @@
                 {
                     "groupName":"TRANSPORTE",
                     "peopleGroup":{
-                        "groupId":"c5ec4e92-0d86-4619-9ffe-c5ece6ed6173",
+                        "groupId":"cacf796a-8dc7-427b-b291-5171840c8a00",
                         "totalPeople": 193,
                         "answered": 140,
                         "notAnswered": 53,
@@ -152,17 +152,17 @@
                         },
                         {
                             "groupNameAnswer":"2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
-                            "groupNameId":"9d7d7484-0d52-4e3f-afe0-0007ec95ab17",
+                            "groupNameId":"732d5d16-5d77-4687-bca0-9168d48039af",
                             "finalAverage":1.0
                         },
                         {
                             "groupNameAnswer":"3. SUPORTE E RECURSOS",
-                            "groupNameId":"6db3c56b-7adf-444a-b378-f53270f059bc",
+                            "groupNameId":"430a4e77-7521-4699-8683-c51f8e912c1c",
                             "finalAverage":1
                         },
                         {
                             "groupNameAnswer":"4. RELAÇÕES PROFISSIONAIS",
-                            "groupNameId":"53cb25f9-8408-420b-8aa9-3b15fbd778d1",
+                            "groupNameId":"b3c39c9b-9608-4512-8554-22e415af0679",
                             "finalAverage":0.7
                         }
                     ]
@@ -174,7 +174,7 @@
     {
       "id": "5de283ce-0586-4f5a-9569-b86d127b0b4c",
       "label": "1. ORGANIZAÇÃO DE DEMANDAS",
-      "name": "agrupador",
+      "name": "agrupador_1",
       "meta": {
         "name_manually_set": false,
         "name_locked": false,
@@ -226,7 +226,7 @@
     {
       "id": "74c09e34-c0e0-4d12-a0ea-0df0027165d9",
       "label": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
-      "name": "agrupador_1",
+      "name": "agrupador_2",
       "meta": {
         "name_manually_set": false,
         "name_locked": false,
@@ -278,7 +278,7 @@
     {
       "id": "186603e5-d462-4068-b657-c9ffdd9d2159",
       "label": "3. SUPORTE E RECURSOS",
-      "name": "agrupador_2",
+      "name": "agrupador_3",
       "meta": {
         "name_manually_set": false,
         "name_locked": false,
@@ -330,7 +330,7 @@
     {
       "id": "7a60570b-150f-45f6-9697-afa2bd0b4d30",
       "label": "4. RELAÇÕES PROFISSIONAIS",
-      "name": "agrupador_3",
+      "name": "agrupador_4",
       "meta": {
         "name_manually_set": false,
         "name_locked": false,
@@ -382,7 +382,7 @@
     {
       "id": "11801cd6-7b0e-48e9-88b1-2fdd6ed2dd9c",
       "label": "5. CLAREZA E ESTRUTURA DE PAPÉIS",
-      "name": "agrupador_4",
+      "name": "agrupador_5",
       "meta": {
         "name_manually_set": false,
         "name_locked": false,
@@ -434,7 +434,7 @@
     {
       "id": "58fadb17-a9db-43ac-815e-4d9cfdd67a2f",
       "label": "6. GESTÃO DE MUDANÇAS",
-      "name": "agrupador_5",
+      "name": "agrupador_6",
       "meta": {
         "name_manually_set": false,
         "name_locked": false,
@@ -486,7 +486,7 @@
     {
       "id": "c3e9299c-3fc6-42c0-b1d6-d16ebb2f6520",
       "label": "7. JUSTICA E COERÊNCIA ORGANIZACIONAL",
-      "name": "agrupador_6",
+      "name": "agrupador_7",
       "meta": {
         "name_manually_set": false,
         "name_locked": false,
@@ -538,7 +538,7 @@
     {
       "id": "abdce0ff-3fa9-4b63-9a81-f35ea2c980f9",
       "label": "8. SEGURANÇA ORGANIZACIONAL E PSICOLÓGICA",
-      "name": "agrupador_7",
+      "name": "agrupador_8",
       "meta": {
         "name_manually_set": false,
         "name_locked": false,
