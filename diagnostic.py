@@ -509,33 +509,7 @@ def draw_score_card(pdf, x, y, value, value_str):
     draw_text(pdf, cx, cy + 25, label, size=11, weight=700, color="#FFFFFF", align="center")
 
 # =========================
-# FUNCAO LIMPAR HTML (CORRIGIDA DE VERDADE)
-# =========================
-
-# def limpar_html(html):
-#     # remove atributos (style, class, etc)
-#     html = re.sub(r'<(\w+)[^>]*>', r'<\1>', html)
-
-#     # remove spans e mantém conteúdo
-#     html = re.sub(r'</?span[^>]*>', '', html)
-
-#     # remove lixo do word (mso-...)
-#     html = re.sub(r'mso-[^:]+:[^;"]+;?', '', html)
-
-#     # converte <p> em quebra de linha REAL do reportlab
-#     html = html.replace('<p>', '<para>')
-#     html = html.replace('</p>', '</para>')
-
-#     # garante quebra de linha entre blocos
-#     html = html.replace('</para><para>', '</para><br/><para>')
-
-#     # remove espaços estranhos
-#     html = html.replace('&nbsp;', ' ')
-
-#     return html.strip()
-
-# =========================
-# FUNCAO LIMPAR HTML (VERSÃO FINAL CORRETA)
+# FUNCAO LIMPAR HTML
 # =========================
 
 def limpar_html(html_content):
@@ -725,9 +699,6 @@ else:
 # =========================
 # PARAGRAPH CORRETO
 # =========================
-
-# html_limpo = limpar_html(final_recommendation)
-# html_final = html_limpo
 
 html_final = limpar_html(final_recommendation)
 
