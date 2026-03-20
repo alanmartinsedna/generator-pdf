@@ -512,55 +512,6 @@ def draw_score_card(pdf, x, y, value, value_str):
 # FUNCAO LIMPAR HTML
 # =========================
 
-# def limpar_html(html_content):
-#     if not html_content:
-#         return "<para></para>"
-
-#     # =========================
-#     # 1. Decodifica entidades HTML (&Aacute; → Á)
-#     # =========================
-#     html_content = html.unescape(html_content)
-
-#     # =========================
-#     # 2. Remove COMPLETAMENTE tags problemáticas
-#     # =========================
-#     html_content = re.sub(r'</?(div|span)[^>]*>', '', html_content)
-
-#     # =========================
-#     # 3. Remove atributos (style, class, etc)
-#     # =========================
-#     html_content = re.sub(r'<(\w+)[^>]*>', r'<\1>', html_content)
-
-#     # =========================
-#     # 4. Remove lixo do Word
-#     # =========================
-#     html_content = re.sub(r'mso-[^:]+:[^;"]+;?', '', html_content)
-
-#     # =========================
-#     # 5. Converte <p> → QUEBRA REAL
-#     # =========================
-#     html_content = re.sub(r'</p>\s*<p>', '<br/><br/>', html_content)
-
-#     html_content = html_content.replace('<p>', '')
-#     html_content = html_content.replace('</p>', '')
-
-#     # =========================
-#     # 6. Limpa espaços
-#     # =========================
-#     html_content = html_content.replace('&nbsp;', ' ')
-#     html_content = re.sub(r'\s+', ' ', html_content)
-
-#     html_content = html_content.strip()
-
-#     # =========================
-#     # 7. GARANTE UM ÚNICO <para>
-#     # =========================
-#     return f"<para>{html_content}</para>"
-
-# =========================
-# FUNCAO LIMPAR HTML (COM CONTROLE DE ESPAÇAMENTO)
-# =========================
-
 def limpar_html(html_content):
     if not html_content:
         return "<para></para>"
