@@ -541,30 +541,26 @@ print(f'total_global_avarage_diagnostic_str= {total_global_avarage_diagnostic_st
 rect_width_3 = 130
 rect_height_3 = 80
 
-if total_global_avarage_diagnostic_number >= 0 and total_global_avarage_diagnostic_number <= 20:
+if 0 <= total_global_avarage_diagnostic_number <= 20:
     background_fill_color = "#ee3650"
     scale_text = "Muito Ruim"
-    pdf.setFillColor(colors.HexColor(background_fill_color))
-elif total_global_avarage_diagnostic_number > 20 and total_global_avarage_diagnostic_number <= 40:
+elif total_global_avarage_diagnostic_number <= 40:
     background_fill_color = "#f4b184"
     scale_text = "Ruim"
-    pdf.setFillColor(colors.HexColor(background_fill_color))
-elif total_global_avarage_diagnostic_number > 40 and total_global_avarage_diagnostic_number <= 60:
+elif total_global_avarage_diagnostic_number <= 60:
     background_fill_color = "#ffd656"
     scale_text = "Razoável"
-    pdf.setFillColor(colors.HexColor(background_fill_color))
-elif total_global_avarage_diagnostic_number > 60 and total_global_avarage_diagnostic_number <= 80:
+elif total_global_avarage_diagnostic_number <= 80:
     background_fill_color = "#c3dfa5"
     scale_text = "Bom"
-    pdf.setFillColor(colors.HexColor(background_fill_color ))
-elif total_global_avarage_diagnostic_number > 80 and total_global_avarage_diagnostic_number <=100:
+elif total_global_avarage_diagnostic_number <= 100:
     background_fill_color = "#2f6e2d"
-    scale_text = "Execelente"
-    pdf.setFillColor(colors.HexColor(background_fill_color))
+    scale_text = "Excelente"
 else:
     background_fill_color = "#adadad"
     scale_text = "n/d"
-    pdf.setFillColor(colors.HexColor(background_fill_color))
+
+pdf.setFillColor(colors.HexColor(background_fill_color))
     
 
 pdf.roundRect(233,400,rect_width_3,rect_height_3,5,fill=1,stroke=0)
