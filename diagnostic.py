@@ -5,8 +5,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Flowable, Paragraph, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
-
-import json
+import re, json, html
 
 def carregar_json(caminho):
     with open(caminho, "r", encoding="utf-8") as f:
@@ -510,6 +509,135 @@ def draw_score_card(pdf, x, y, value, value_str):
     draw_text(pdf, cx, cy + 25, label, size=11, weight=700, color="#FFFFFF", align="center")
 
 # =========================
+# FUNCAO LIMPAR HTML (CORRIGIDA DE VERDADE)
+# =========================
+
+# def limpar_html(html):
+#     # remove atributos (style, class, etc)
+#     html = re.sub(r'<(\w+)[^>]*>', r'<\1>', html)
+
+#     # remove spans e mantém conteúdo
+#     html = re.sub(r'</?span[^>]*>', '', html)
+
+#     # remove lixo do word (mso-...)
+#     html = re.sub(r'mso-[^:]+:[^;"]+;?', '', html)
+
+#     # converte <p> em quebra de linha REAL do reportlab
+#     html = html.replace('<p>', '<para>')
+#     html = html.replace('</p>', '</para>')
+
+#     # garante quebra de linha entre blocos
+#     html = html.replace('</para><para>', '</para><br/><para>')
+
+#     # remove espaços estranhos
+#     html = html.replace('&nbsp;', ' ')
+
+#     return html.strip()
+
+# =========================
+# FUNCAO LIMPAR HTML (VERSÃO FINAL CORRETA)
+# =========================
+
+def limpar_html(html_content):
+    if not html_content:
+        return "<para></para>"
+
+    # =========================
+    # 1. Decodifica entidades HTML (&Aacute; → Á)
+    # =========================
+    html_content = html.unescape(html_content)
+
+    # =========================
+    # 2. Remove COMPLETAMENTE tags problemáticas
+    # =========================
+    html_content = re.sub(r'</?(div|span)[^>]*>', '', html_content)
+
+    # =========================
+    # 3. Remove atributos (style, class, etc)
+    # =========================
+    html_content = re.sub(r'<(\w+)[^>]*>', r'<\1>', html_content)
+
+    # =========================
+    # 4. Remove lixo do Word
+    # =========================
+    html_content = re.sub(r'mso-[^:]+:[^;"]+;?', '', html_content)
+
+    # =========================
+    # 5. Converte <p> → QUEBRA REAL
+    # =========================
+    html_content = re.sub(r'</p>\s*<p>', '<br/><br/>', html_content)
+
+    html_content = html_content.replace('<p>', '')
+    html_content = html_content.replace('</p>', '')
+
+    # =========================
+    # 6. Limpa espaços
+    # =========================
+    html_content = html_content.replace('&nbsp;', ' ')
+    html_content = re.sub(r'\s+', ' ', html_content)
+
+    html_content = html_content.strip()
+
+    # =========================
+    # 7. GARANTE UM ÚNICO <para>
+    # =========================
+    return f"<para>{html_content}</para>"
+
+# =========================
+# DESENHAR PARAGRAFO
+# =========================
+
+def draw_paragraph(pdf, paragraph, x, y, max_width):
+    w, h = paragraph.wrap(max_width, 1000)
+
+    pdf.saveState()
+    pdf.scale(1, -1)
+    paragraph.drawOn(pdf, x, -(y + h))
+    pdf.restoreState()
+
+    return h  # útil pra layout dinâmico
+
+# =========================
+# FUNCAO BUSCA RECOMENDAÇÃO
+# =========================
+
+def get_recommendation_by_score(data_json, score, group_name=None):
+    """
+    Retorna a recomendação baseada no score.
+
+    :param data_json: JSON completo
+    :param score: valor numérico (ex: 12, 2.4, 50.5, 100)
+    :param group_name: opcional (name do agrupador, ex: 'agrupador_1')
+    :return: dict com recommendation, concept, start, end
+    """
+
+    data_recommendation = data_json.get("dataRecommendation", [])
+
+    for group in data_recommendation:
+        # 🔹 filtro opcional por agrupador
+        if group_name and group.get("name") != group_name:
+            continue
+
+        meta = group.get("meta", {})
+        rec_list = meta.get("recommendations", [])
+
+        for rec in rec_list:
+            start = rec.get("start")
+            end = rec.get("end")
+
+            # 🔥 comparação principal
+            if start is not None and end is not None:
+                if start <= score <= end:
+                    return {
+                        "recommendation": rec.get("recommendations"),
+                        "concept": rec.get("concept"),
+                        "start": start,
+                        "end": end
+                    }
+
+    return None
+
+# =========================
 # EXECUÇÃO
 # =========================
 
@@ -577,6 +705,40 @@ total_global_avarage_diagnostic_str = total_global_avarage_diagnostic[1]
 
 draw_score_card(pdf,x=233,y=400,value=total_global_avarage_diagnostic_number,value_str=total_global_avarage_diagnostic_str)
     
+draw_text(pdf,x=20,y=520,text="1. ORGANIZAÇÃO DAS DEMANDAS",size=12,font="Helvetica",weight=700,color="#283BCC",align="left")
+
+resultado = get_recommendation_by_score(
+    data_json,
+    total_global_avarage_diagnostic_number,
+    group_name="agrupador_1"
+)
+
+# =========================
+# TRATAMENTO SEGURO
+# =========================
+
+if resultado:
+    final_recommendation = resultado["recommendation"]
+else:
+    final_recommendation = "<p>Sem recomendação disponível</p>"
+
+# =========================
+# PARAGRAPH CORRETO
+# =========================
+
+# html_limpo = limpar_html(final_recommendation)
+# html_final = html_limpo
+
+html_final = limpar_html(final_recommendation)
+
+styles = getSampleStyleSheet()
+
+p = Paragraph(html_final, styles['Normal'])
+
+h = draw_paragraph(pdf, p, 20, 540, 555)
+
+
+
 # "------------⬆️-------- FIM DO BLOCO PARA CONTEUDO DO RELATORIO -------⬆️------------"
 # =======================================================================================
 
