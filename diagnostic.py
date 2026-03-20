@@ -398,7 +398,7 @@ def montar_tabela_publico(json_data):
 
             if total > 0:
                 adherence = (answered / total) * 100
-                adherence = f"{adherence:.1f}%"
+                adherence = f"{adherence:.2f}%"
             else:
                 adherence = "0%"
 
@@ -449,10 +449,8 @@ def calc_global_diagnostic_average(json_data):
     for report in json_data.get("reportData", []):
         public_groups = report.get("public_groups", [])
         quantity_groups = len(public_groups)
-        print(f'quantity_groups = {quantity_groups}')
         for group in public_groups:
             people = group.get("peopleGroup", {})
-            print(f'people = {people}')
             total_avarage_group = people.get("avarageGroup", 0)
             total_avarage_sum += total_avarage_group
 
@@ -460,12 +458,56 @@ def calc_global_diagnostic_average(json_data):
         raise Exception("Erro: total de GRUPOS é MENOR OU IGUAL a zero.")
     
     total_avarage_result = ((total_avarage_sum / quantity_groups) * 100)
-    print(f"total_avarage_result = {total_avarage_result}")
 
     formated_total_avarage_result = f'{total_avarage_result:.1f}%'
 
     return total_avarage_result, formated_total_avarage_result 
 
+# =========================
+# FUNÇÃO CRIA CARD STATUS GERAL DO DIAGNOSTICO
+# =========================
+
+def draw_score_card(pdf, x, y, value, value_str):
+    rect_width = 130
+    rect_height = 80
+
+    # lógica de cor
+    if 0 <= value <= 20:
+        bg = "#ee3650"
+        label = "Muito Ruim"
+    elif value <= 40:
+        bg = "#f4b184"
+        label = "Ruim"
+    elif value <= 60:
+        bg = "#ffd656"
+        label = "Razoável"
+    elif value <= 80:
+        bg = "#c3dfa5"
+        label = "Bom"
+    elif value <= 100:
+        bg = "#2f6e2d"
+        label = "Excelente"
+    else:
+        bg = "#adadad"
+        label = "n/d"
+
+    # fundo
+    pdf.setFillColor(colors.HexColor(bg))
+    pdf.roundRect(x, y, rect_width, rect_height, 5, fill=1, stroke=0)
+
+    # centro
+    cx = x + rect_width / 2
+    cy = y + ((rect_height / 2) - 10)
+
+    # círculo
+    pdf.setFillColor(colors.white)
+    pdf.circle(cx, cy, 20, stroke=0, fill=1)
+
+    # número
+    draw_text(pdf, cx, cy - 7, value_str, size=11, weight=700, color=bg, align="center")
+
+    # label
+    draw_text(pdf, cx, cy + 25, label, size=11, weight=700, color="#FFFFFF", align="center")
 
 # =========================
 # EXECUÇÃO
@@ -530,46 +572,10 @@ draw_table(
 draw_text(pdf,x=20,y=340,text=calc_global_adherence_average(data_json),size=16,font="Helvetica",weight=700,color="#596CFF",align="left")
 
 total_global_avarage_diagnostic = calc_global_diagnostic_average(data_json)
-print(f'total_global_avarage_diagnostic = {total_global_avarage_diagnostic}')
-
 total_global_avarage_diagnostic_number = total_global_avarage_diagnostic[0]
-print(f'total_global_avarage_diagnostic_number= {total_global_avarage_diagnostic_number}')
-
 total_global_avarage_diagnostic_str = total_global_avarage_diagnostic[1]
-print(f'total_global_avarage_diagnostic_str= {total_global_avarage_diagnostic_str}')
 
-rect_width_3 = 130
-rect_height_3 = 80
-
-if 0 <= total_global_avarage_diagnostic_number <= 20:
-    background_fill_color = "#ee3650"
-    scale_text = "Muito Ruim"
-elif total_global_avarage_diagnostic_number <= 40:
-    background_fill_color = "#f4b184"
-    scale_text = "Ruim"
-elif total_global_avarage_diagnostic_number <= 60:
-    background_fill_color = "#ffd656"
-    scale_text = "Razoável"
-elif total_global_avarage_diagnostic_number <= 80:
-    background_fill_color = "#c3dfa5"
-    scale_text = "Bom"
-elif total_global_avarage_diagnostic_number <= 100:
-    background_fill_color = "#2f6e2d"
-    scale_text = "Excelente"
-else:
-    background_fill_color = "#adadad"
-    scale_text = "n/d"
-
-pdf.setFillColor(colors.HexColor(background_fill_color))
-    
-
-pdf.roundRect(233,400,rect_width_3,rect_height_3,5,fill=1,stroke=0)
-pdf.setStrokeColor(colors.white)
-pdf.setFillColor(colors.HexColor("#ffffff"))
-pdf.circle(298,430,20,stroke=1, fill=1)
-
-draw_text(pdf,x=298,y=423,text=total_global_avarage_diagnostic_str,size=11,font="Helvetica",weight=700,color=background_fill_color,align="center")
-draw_text(pdf,x=298,y=455,text=scale_text,size=11,font="Helvetica",weight=700,color="#FFFFFF",align="center")
+draw_score_card(pdf,x=233,y=400,value=total_global_avarage_diagnostic_number,value_str=total_global_avarage_diagnostic_str)
     
 # "------------⬆️-------- FIM DO BLOCO PARA CONTEUDO DO RELATORIO -------⬆️------------"
 # =======================================================================================
