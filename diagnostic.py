@@ -509,78 +509,109 @@ def draw_score_card(pdf, x, y, value, value_str):
     draw_text(pdf, cx, cy + 25, label, size=11, weight=700, color="#FFFFFF", align="center")
 
 # =========================
-# FUNCAO LIMPAR HTML
+# FUNCAO LIMPAR HTML + TIPOGRAFIA
 # =========================
 
 def limpar_html(html_content):
     if not html_content:
-        return "<para></para>"
+        return []
 
-    # =========================
-    # 1. Decodifica entidades HTML (&Aacute; → Á)
-    # =========================
     html_content = html.unescape(html_content)
 
-    # =========================
-    # 2. Remove tags problemáticas
-    # =========================
     html_content = re.sub(r'</?(div|span)[^>]*>', '', html_content)
-
-    # =========================
-    # 3. Remove atributos (style, class, etc)
-    # =========================
     html_content = re.sub(r'<(\w+)[^>]*>', r'<\1>', html_content)
-
-    # =========================
-    # 4. Remove lixo do Word
-    # =========================
     html_content = re.sub(r'mso-[^:]+:[^;"]+;?', '', html_content)
 
-    # =========================
-    # 5. REMOVE PARÁGRAFOS VAZIOS (ESSENCIAL)
-    # =========================
     html_content = re.sub(r'<p>\s*</p>', '', html_content)
     html_content = re.sub(r'<p>\s*&nbsp;\s*</p>', '', html_content)
 
-    # =========================
-    # 6. Converte <p> → quebra controlada
-    # =========================
-    html_content = re.sub(r'</p>\s*<p>', '<br/><br/>', html_content)
+    TAG_MAP = {
+        "h1": (32, True),
+        "h2": (24, True),
+        "h3": (18, True),
+        "h4": (16, True),
+        "h5": (13, True),
+        "h6": (10, True),
+        "p": (13, False),
+        "li": (13, False),
+    }
 
-    html_content = html_content.replace('<p>', '')
-    html_content = html_content.replace('</p>', '')
+    blocks = []
 
-    # =========================
-    # 7. Normaliza múltiplas quebras (🔥 AQUI RESOLVE SEU PROBLEMA)
-    # =========================
-    html_content = re.sub(r'(<br/>\s*){3,}', '<br/><br/>', html_content)
+    def process_block(tag, text):
+        size_px, bold = TAG_MAP.get(tag, (16, False))
+        size_pt = px_to_pt(size_px)
 
-    # =========================
-    # 8. Limpa espaços
-    # =========================
-    html_content = html_content.replace('&nbsp;', ' ')
-    html_content = re.sub(r'\s+', ' ', html_content)
+        text = text.strip()
 
-    html_content = html_content.strip()
+        # inline tags
+        text = re.sub(r'<strong>(.*?)</strong>', r'<b>\1</b>', text)
+        text = re.sub(r'<i>(.*?)</i>', r'<i>\1</i>', text)
+        text = re.sub(r'<u>(.*?)</u>', r'<u>\1</u>', text)
 
-    # =========================
-    # 9. GARANTE UM ÚNICO <para>
-    # =========================
-    return f"<para>{html_content}</para>"
+        if tag == "li":
+            text = f"• {text}"
+
+        if bold:
+            text = f'<font size="{size_pt}"><b>{text}</b></font>'
+        else:
+            text = f'<font size="{size_pt}">{text}</font>'
+
+        # blocks.append(text)
+        blocks.append({
+            "text": text,
+            "tag": tag
+        })
+
+    matches = re.findall(r'<(h[1-6]|p|li)>(.*?)</\1>', html_content, re.DOTALL)
+
+    for tag, content in matches:
+        process_block(tag, content)
+
+    return blocks
 
 # =========================
 # DESENHAR PARAGRAFO
 # =========================
 
-def draw_paragraph(pdf, paragraph, x, y, max_width):
-    w, h = paragraph.wrap(max_width, 1000)
+def draw_paragraphs(pdf, blocks, x, y, max_width):
+    current_y = y
+    styles = getSampleStyleSheet()
 
-    pdf.saveState()
-    pdf.scale(1, -1)
-    paragraph.drawOn(pdf, x, -(y + h))
-    pdf.restoreState()
+    total_blocks = len(blocks)
 
-    return h  # útil pra layout dinâmico
+    for i, block in enumerate(blocks):
+        text = block["text"]
+        tag = block["tag"]
+
+        p = Paragraph(text, styles['Normal'])
+
+        w, h = p.wrap(max_width, 1000)
+
+        pdf.saveState()
+        pdf.scale(1, -1)
+        p.drawOn(pdf, x, -(current_y + h))
+        pdf.restoreState()
+
+        # =========================
+        # 🎯 CONTROLE INTELIGENTE DE ESPAÇAMENTO
+        # =========================
+
+        next_tag = blocks[i + 1]["tag"] if i + 1 < total_blocks else None
+
+        if tag == "li":
+            if next_tag == "li":
+                # 🔹 item de lista (meio da lista)
+                spacing = 2   # espaçamento interno da lista
+            else:
+                # 🔹 último item da lista
+                spacing = 10  # mantém espaçamento externo normal
+        else:
+            spacing = 10  # padrão geral
+
+        current_y += h + spacing
+
+    return current_y
 
 # =========================
 # FUNCAO BUSCA RECOMENDAÇÃO
@@ -711,15 +742,17 @@ else:
 # PARAGRAPH CORRETO
 # =========================
 
-html_final = limpar_html(final_recommendation)
-
 styles = getSampleStyleSheet()
 
-p = Paragraph(html_final, styles['Normal'])
+blocks = limpar_html(final_recommendation)
 
-h = draw_paragraph(pdf, p, 20, 540, 555)
-
-
+draw_paragraphs(
+    pdf,
+    blocks,
+    x=20,
+    y=540,
+    max_width=555
+)
 
 # "------------⬆️-------- FIM DO BLOCO PARA CONTEUDO DO RELATORIO -------⬆️------------"
 # =======================================================================================
