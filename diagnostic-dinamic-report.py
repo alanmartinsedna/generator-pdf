@@ -1,4 +1,7 @@
-from reportlab.pdfgen import canvas
+# =========================
+# IMPORTS
+# =========================
+
 from reportlab.platypus import (
     BaseDocTemplate, Frame, PageTemplate,
     Paragraph, Table, TableStyle, Spacer
@@ -8,14 +11,23 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 
 # =========================
-# UTILIDADES DEFAULT
+# CONSTANTES
 # =========================
 
-# Converte pixel para pontos
+MARGIN_LEFT = 56.7
+MARGIN_RIGHT = 56.7
+MARGIN_TOP = 56.7
+MARGIN_BOTTOM = 70.9
+FOOTER_Y = 42.5
+HEADER_BOTTOM_PADDING = 40
+
+# =========================
+# UTILIDADES
+# =========================
+
 def px_to_pt(px):
     return px * 0.75
 
-# 👉 Converte cor HEX (CSS) → RGB (0 a 1)
 def hex_to_rgb(hex_color):
     hex_color = hex_color.lstrip('#')
     return (
@@ -24,12 +36,6 @@ def hex_to_rgb(hex_color):
         int(hex_color[4:6], 16) / 255,
     )
 
-'''
-👉 Faz transição suave entre duas cores
-c1 = cor inicial
-c2 = cor final
-t = valor entre 0 e 1
-'''
 def interpolate_color(c1, c2, t):
     return (
         c1[0] + (c2[0] - c1[0]) * t,
@@ -38,10 +44,10 @@ def interpolate_color(c1, c2, t):
     )
 
 # =========================
-# GRADIENTE
+# BACKGROUND (GRADIENTE)
 # =========================
 
-def draw_css_gradient(pdf, width, height):
+def draw_css_gradient(canvas, width, height):
     steps = 300
 
     hex_colors = [
@@ -66,73 +72,155 @@ def draw_css_gradient(pdf, width, height):
 
         r, g, b = interpolate_color(c1, c2, t_local)
 
-        pdf.setFillColor(colors.Color(r, g, b))
+        canvas.setFillColor(colors.Color(r, g, b))
 
-        horizontal_position = (width / steps) * i
-        pdf.rect(horizontal_position, 0, width / steps + 2, height, stroke=0, fill=1)
-        
+        x = (width / steps) * i
+        canvas.rect(x, 0, width / steps + 2, height, stroke=0, fill=1)
+
 # =========================
-# IMAGENS DO BACKGROUND DO DOCUMENTO
+# BACKGROUND IMAGENS
 # =========================
 
-def draw_images(pdf, width, height):
+def draw_images(canvas, width, height):
     scale_factor = 0.35
 
-    # -------------------------Q
-    # IMG 1 bg-img-1.png
-    # -------------------------
     img1_width = px_to_pt(883 * scale_factor)
     img1_height = px_to_pt(1175 * scale_factor)
 
-    x1 = 409
-    y1 = 540
-    
-    pdf.drawImage(
+    canvas.drawImage(
         "bg-img-1.png",
-        x1,
-        y1,
+        409,
+        540,
         width=img1_width,
         height=img1_height,
         mask='auto'
     )
 
-    # -------------------------
-    # IMG 2 bg-img-2.png
-    # -------------------------
     img2_width = px_to_pt(1598 * scale_factor)
     img2_height = px_to_pt(1825 * scale_factor)
 
-    x2 = -165
-    y2 = -172
-
-    pdf.drawImage(
+    canvas.drawImage(
         "bg-img-2.png",
-        x2,
-        y2,
+        -165,
+        -172,
         width=img2_width,
         height=img2_height,
         mask='auto'
     )
 
 # =========================
-# EXECUÇÃO DO BACKGROUND DO ARQUIVO
+# LOGO
 # =========================
 
-pdf = canvas.Canvas("Relatorio-Diagnostico.pdf", pagesize=A4)
-width, height = A4
-draw_css_gradient(pdf, width, height)
-draw_images(pdf, width, height)
+def draw_logo(canvas):
+    page_width, page_height = canvas._pagesize
 
+    width = 100
+    height = 48
+
+    x = (page_width - width) / 2
+    y = page_height - 10 - height
+
+    canvas.drawImage(
+        "logo-edna-center.png",
+        x,
+        y,
+        width=width,
+        height=height,
+        mask='auto'
+    )
+
+# =========================
+# BACKGROUND (ANTES DO CONTEÚDO)
+# =========================
+
+def draw_background(canvas, doc):
+    canvas.saveState()
+
+    width, height = A4
+
+    draw_css_gradient(canvas, width, height)
+    draw_images(canvas, width, height)
+
+    canvas.restoreState()
+
+# =========================
+# HEADER + FOOTER (DEPOIS DO CONTEÚDO)
+# =========================
+
+def draw_header_footer(canvas, doc):
+    canvas.saveState()
+
+    width, height = A4
+
+    # LOGO
+    draw_logo(canvas)
+
+    # FOOTER (agora sempre visível)
+    canvas.setFont("Helvetica", 9)
+    canvas.setFillColor(colors.black)
+
+    page_number_text = f"Página {doc.page}"
+
+    canvas.drawRightString(
+        width - MARGIN_RIGHT,
+        FOOTER_Y,
+        page_number_text
+    )
+
+    canvas.restoreState()
+
+# =========================
+# DOCUMENTO BASE
+# =========================
+
+doc = BaseDocTemplate(
+    "./pdf-files/Z-Relatório Diagnóstico de Riscos Psicossociais.pdf",
+    pagesize=A4
+)
+
+# =========================
+# FRAME (ÁREA DO CONTEÚDO)
+# =========================
+
+frame = Frame(
+    x1=MARGIN_LEFT,
+    y1=MARGIN_BOTTOM,
+    width=A4[0] - (MARGIN_LEFT + MARGIN_RIGHT),
+    height=A4[1] - (MARGIN_TOP + MARGIN_BOTTOM + HEADER_BOTTOM_PADDING),
+    id="main_frame"
+)
+
+# =========================
+# TEMPLATE
+# =========================
+
+template = PageTemplate(
+    id="main_template",
+    frames=[frame],
+    onPage=draw_background,        # 🔥 fundo primeiro
+    onPageEnd=draw_header_footer  # 🔥 depois footer/logo por cima
+)
+
+doc.addPageTemplates([template])
+
+# =========================
+# ESTILOS
+# =========================
+
+styles = getSampleStyleSheet()
+
+# =========================
+# CONTEÚDO DINÂMICO
+# =========================
+
+elements = []
 
 # =======================================================================================
 # "------------⬇️------ INICIO DO BLOCO PARA CONTEUDO DO RELATORIO ------⬇️------------"
 
-
-
-
-
-
-
+elements.append(Paragraph("Relatório Dinâmico", styles["Title"]))
+elements.append(Spacer(1, 20))
 
 
 
@@ -140,4 +228,8 @@ draw_images(pdf, width, height)
 # "------------⬆️-------- FIM DO BLOCO PARA CONTEUDO DO RELATORIO -------⬆️------------"
 # =======================================================================================
 
-pdf.save()
+# =========================
+# BUILD FINAL
+# =========================
+
+doc.build(elements)
