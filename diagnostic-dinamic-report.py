@@ -227,7 +227,7 @@ elements.append(
             name="Custom",
             fontName="Helvetica-Bold",  # weight 700
             fontSize=20,
-            textColor=colors.Color(89/255, 108/255, 255/255, alpha=1),
+            textColor=colors.HexColor('#596CFF'),
             alignment=0  # left
         )
     )
@@ -240,7 +240,7 @@ elements.append(
             name="Custom",
             fontName="Helvetica",  # weight 400
             fontSize=7,
-            textColor=colors.Color(52/255, 71/255, 103/255, alpha=1),
+            textColor=colors.HexColor('#344767'),
             alignment=0  # left
         )
     )
