@@ -8,18 +8,18 @@ from reportlab.platypus import (
 )
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 # =========================
 # CONSTANTES
 # =========================
 
-MARGIN_LEFT = 56.7
-MARGIN_RIGHT = 56.7
+MARGIN_LEFT = 20
+MARGIN_RIGHT = 20
 MARGIN_TOP = 56.7
 MARGIN_BOTTOM = 70.9
 FOOTER_Y = 42.5
-HEADER_BOTTOM_PADDING = 40
+HEADER_BOTTOM_PADDING = 20
 
 # =========================
 # UTILIDADES
@@ -175,7 +175,7 @@ def draw_header_footer(canvas, doc):
 # =========================
 
 doc = BaseDocTemplate(
-    "./pdf-files/Z-Relatório Diagnóstico de Riscos Psicossociais.pdf",
+    "./pdf-files/Diagnóstico de Riscos Psicossociais.pdf",
     pagesize=A4
 )
 
@@ -218,8 +218,33 @@ elements = []
 
 # =======================================================================================
 # "------------⬇️------ INICIO DO BLOCO PARA CONTEUDO DO RELATORIO ------⬇️------------"
+style = ParagraphStyle(...)
 
-elements.append(Paragraph("Relatório Dinâmico", styles["Title"]))
+elements.append(
+    Paragraph(
+        "Diagnóstico de Riscos Psicossociais",
+        ParagraphStyle(
+            name="Custom",
+            fontName="Helvetica-Bold",  # weight 700
+            fontSize=20,
+            textColor=colors.Color(89/255, 108/255, 255/255, alpha=1),
+            alignment=0  # left
+        )
+    )
+)
+elements.append(Spacer(1, 20))
+elements.append(
+    Paragraph(
+        "Grupo Agulhas Negras - Agulhas Negras",
+        ParagraphStyle(
+            name="Custom",
+            fontName="Helvetica",  # weight 400
+            fontSize=7,
+            textColor=colors.Color(52/255, 71/255, 103/255, alpha=1),
+            alignment=0  # left
+        )
+    )
+)
 elements.append(Spacer(1, 20))
 
 
