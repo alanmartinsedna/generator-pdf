@@ -37,6 +37,19 @@ from reportlab.lib.units import cm
 '''
 
 # =========================
+# CONSTANTES (EM PONTOS)
+# =========================
+
+MARGIN_LEFT = 56.7     # 2 cm
+MARGIN_RIGHT = 56.7    # 2 cm
+MARGIN_TOP = 56.7      # 2 cm
+MARGIN_BOTTOM = 70.9   # 2.5 cm
+
+HEADER_LINE_Y_OFFSET = 62.4   # 2.2 cm
+FOOTER_Y = 42.5               # 1.5 cm
+HEADER_BOTTOM_PADDING = 20  # 🔥 espaço extra abaixo do header
+
+# =========================
 # HEADER E FOOTER
 # ========================= 
 
@@ -54,18 +67,32 @@ def header_footer(canvas, doc):
     canvas.saveState()
 
     # HEADER
-    # Define tamanho de fonte
     canvas.setFont("Helvetica-Bold", 10)
-    # Desenha o titulo
-    canvas.drawString(2 * cm, A4[1] - 2 * cm, "Relatório de Exemplo")
+
+    canvas.drawString(
+        MARGIN_LEFT,
+        A4[1] - MARGIN_TOP,
+        "Relatório de Exemplo"
+    )
 
     # linha abaixo do header
-    canvas.line(2 * cm, A4[1] - 2.2 * cm, A4[0] - 2 * cm, A4[1] - 2.2 * cm)
+    canvas.line(
+        MARGIN_LEFT,
+        A4[1] - HEADER_LINE_Y_OFFSET,
+        A4[0] - MARGIN_RIGHT,
+        A4[1] - HEADER_LINE_Y_OFFSET
+    )
 
     # FOOTER
     canvas.setFont("Helvetica", 9)
+
     page_number_text = f"Página {doc.page}"
-    canvas.drawRightString(A4[0] - 2 * cm, 1.5 * cm, page_number_text)
+
+    canvas.drawRightString(
+        A4[0] - MARGIN_RIGHT,
+        FOOTER_Y,
+        page_number_text
+    )
 
     canvas.restoreState()
 
@@ -93,10 +120,10 @@ doc = BaseDocTemplate("relatorio_profissional.pdf", pagesize=A4)
 '''
 
 frame = Frame(
-    x1=2 * cm, # ➡️ margem esquerda
-    y1=2.5 * cm, # ➡️ margem inferior (começo do frame)
-    width=A4[0] - 4 * cm, # ➡️ largura total - margens esquerda/direita
-    height=A4[1] - 5 * cm,  # ➡️ altura total - espaço de header + footer
+    x1=MARGIN_LEFT, # ➡️ margem esquerda
+    y1=MARGIN_BOTTOM, # ➡️ margem inferior (começo do frame)
+    width=A4[0] - (MARGIN_LEFT + MARGIN_RIGHT), # ➡️ largura total - margens esquerda/direita
+    height=A4[1] - (MARGIN_TOP + MARGIN_BOTTOM + HEADER_BOTTOM_PADDING),  # ➡️ altura total - espaço de header + footer
     id="normal" # ➡️ identificador do frame (útil em layouts complexos)
 )
 
@@ -166,7 +193,7 @@ data = [["Nome Completo do usuário", "Idade", "Cidade onde reside"]]
     data.append = ➡️ adiciona linha
 '''
 
-for i in range(50):  # simula dados do backend
+for i in range(150):  # simula dados do backend
     data.append([f"Pessoa {i}", str(20 + i), "Cidade XYZ"])
 '''
     table ➡️ cria tabela
