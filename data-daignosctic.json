@@ -1,0 +1,566 @@
+{
+  "reportData": [
+    {
+      "diagnosticName": "Diagnóstico de Riscos Psicossociais",
+      "diagnosticId": "11111111-aaaa-4a67-aa37-fb7bb7c5361a",
+      "publicData": {
+        "economicGroup": "Grupo Agulhas Negras",
+        "economicGroupId": "22222222-bbbb-41db-b2f1-4b1282b2daf1",
+        "public_groups": [
+          {
+            "groupName": "COLABORADORES",
+            "peopleGroup": {
+              "groupId": "33333333-0001-4a9d-bc20-9ad6627ccc28",
+              "totalPeople": 120,
+              "answered": 95,
+              "notAnswered": 25,
+              "avarageGroup": 0.44
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "a1",
+                "finalAverage": 0.5
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "a2",
+                "finalAverage": 0.83
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "a3",
+                "finalAverage": 0.35
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "a4",
+                "finalAverage": 0.09
+              }
+            ]
+          },
+          {
+            "groupName": "OPERACIONAL",
+            "peopleGroup": {
+              "groupId": "33333333-0002",
+              "totalPeople": 10,
+              "answered": 5,
+              "notAnswered": 5,
+              "avarageGroup": 0.28
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "b1",
+                "finalAverage": 0.15
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "b2",
+                "finalAverage": 0.22
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "b3",
+                "finalAverage": 0.32
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "b4",
+                "finalAverage": 0.43
+              }
+            ]
+          },
+          {
+            "groupName": "TI",
+            "peopleGroup": {
+              "groupId": "33333333-0003",
+              "totalPeople": 33,
+              "answered": 5,
+              "notAnswered": 28,
+              "avarageGroup": 0.78
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "c1",
+                "finalAverage": 0.7
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "c2",
+                "finalAverage": 1.0
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "c3",
+                "finalAverage": 0.63
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "c4",
+                "finalAverage": 0.8
+              }
+            ]
+          },
+          {
+            "groupName": "MECÂNICA",
+            "peopleGroup": {
+              "groupId": "33333333-0004",
+              "totalPeople": 93,
+              "answered": 29,
+              "notAnswered": 64,
+              "avarageGroup": 0.095
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "d1",
+                "finalAverage": 0.12
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "d2",
+                "finalAverage": 0.22
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "d3",
+                "finalAverage": 0.04
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "d4",
+                "finalAverage": 0.0
+              }
+            ]
+          },
+          {
+            "groupName": "TRANSPORTE",
+            "peopleGroup": {
+              "groupId": "33333333-0005",
+              "totalPeople": 193,
+              "answered": 140,
+              "notAnswered": 53,
+              "avarageGroup": 0.925
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "e1",
+                "finalAverage": 1.0
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "e2",
+                "finalAverage": 1.0
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "e3",
+                "finalAverage": 1.0
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "e4",
+                "finalAverage": 0.7
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "diagnosticName": "Diagnóstico Psicossocial",
+      "diagnosticId": "44444444-aaaa",
+      "publicData": {
+        "economicGroup": "Grupo Toriba",
+        "economicGroupId": "55555555-bbbb",
+        "public_groups": [
+          {
+            "groupName": "GRUPO 1",
+            "peopleGroup": {
+              "groupId": "g1",
+              "totalPeople": 22,
+              "answered": 18,
+              "notAnswered": 4,
+              "avarageGroup": 0.5
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "f1",
+                "finalAverage": 0.5
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "f2",
+                "finalAverage": 0.6
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "f3",
+                "finalAverage": 0.4
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "f4",
+                "finalAverage": 0.5
+              }
+            ]
+          },
+          {
+            "groupName": "GRUPO 2",
+            "peopleGroup": {
+              "groupId": "g2",
+              "totalPeople": 69,
+              "answered": 50,
+              "notAnswered": 19,
+              "avarageGroup": 0.6
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "g21",
+                "finalAverage": 0.6
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "g22",
+                "finalAverage": 0.7
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "g23",
+                "finalAverage": 0.5
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "g24",
+                "finalAverage": 0.6
+              }
+            ]
+          },
+          {
+            "groupName": "GRUPO 3",
+            "peopleGroup": {
+              "groupId": "g3",
+              "totalPeople": 78,
+              "answered": 60,
+              "notAnswered": 18,
+              "avarageGroup": 0.7
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "g31",
+                "finalAverage": 0.7
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "g32",
+                "finalAverage": 0.8
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "g33",
+                "finalAverage": 0.6
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "g34",
+                "finalAverage": 0.7
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "diagnosticName": "Diagnóstico Psicossocial",
+      "diagnosticId": "66666666-cccc",
+      "publicData": {
+        "economicGroup": "Grupo Toriba",
+        "economicGroupId": "77777777-dddd",
+        "public_groups": [
+          {
+            "groupName": "GRUPO ÚNICO",
+            "peopleGroup": {
+              "groupId": "g4",
+              "totalPeople": 46,
+              "answered": 30,
+              "notAnswered": 16,
+              "avarageGroup": 0.55
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "h1",
+                "finalAverage": 0.5
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "h2",
+                "finalAverage": 0.6
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "h3",
+                "finalAverage": 0.5
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "h4",
+                "finalAverage": 0.6
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "diagnosticName": "Diagnóstico Psicossocial",
+      "diagnosticId": "88888888-eeee",
+      "publicData": {
+        "economicGroup": "Grupo Toyoville",
+        "economicGroupId": "99999999-ffff",
+        "public_groups": [
+          {
+            "groupName": "G1",
+            "peopleGroup": {
+              "groupId": "t1",
+              "totalPeople": 150,
+              "answered": 120,
+              "notAnswered": 30,
+              "avarageGroup": 0.6
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "i1",
+                "finalAverage": 0.6
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "i2",
+                "finalAverage": 0.7
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "i3",
+                "finalAverage": 0.5
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "i4",
+                "finalAverage": 0.6
+              }
+            ]
+          },
+          {
+            "groupName": "G2",
+            "peopleGroup": {
+              "groupId": "t2",
+              "totalPeople": 693,
+              "answered": 500,
+              "notAnswered": 193,
+              "avarageGroup": 0.65
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "j1",
+                "finalAverage": 0.6
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "j2",
+                "finalAverage": 0.7
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "j3",
+                "finalAverage": 0.6
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "j4",
+                "finalAverage": 0.7
+              }
+            ]
+          },
+          {
+            "groupName": "G3",
+            "peopleGroup": {
+              "groupId": "t3",
+              "totalPeople": 12,
+              "answered": 8,
+              "notAnswered": 4,
+              "avarageGroup": 0.5
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "k1",
+                "finalAverage": 0.5
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "k2",
+                "finalAverage": 0.6
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "k3",
+                "finalAverage": 0.4
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "k4",
+                "finalAverage": 0.5
+              }
+            ]
+          },
+          {
+            "groupName": "G4",
+            "peopleGroup": {
+              "groupId": "t4",
+              "totalPeople": 96,
+              "answered": 70,
+              "notAnswered": 26,
+              "avarageGroup": 0.55
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "l1",
+                "finalAverage": 0.5
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "l2",
+                "finalAverage": 0.6
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "l3",
+                "finalAverage": 0.5
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "l4",
+                "finalAverage": 0.6
+              }
+            ]
+          },
+          {
+            "groupName": "G5",
+            "peopleGroup": {
+              "groupId": "t5",
+              "totalPeople": 781,
+              "answered": 600,
+              "notAnswered": 181,
+              "avarageGroup": 0.7
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "m1",
+                "finalAverage": 0.7
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "m2",
+                "finalAverage": 0.8
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "m3",
+                "finalAverage": 0.6
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "m4",
+                "finalAverage": 0.7
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "diagnosticName": "Diagnóstico Psicossocial",
+      "diagnosticId": "aaaaaaaa-1111",
+      "publicData": {
+        "economicGroup": "Grupo Toyoville",
+        "economicGroupId": "bbbbbbbb-2222",
+        "public_groups": [
+          {
+            "groupName": "G1",
+            "peopleGroup": {
+              "groupId": "x1",
+              "totalPeople": 37,
+              "answered": 25,
+              "notAnswered": 12,
+              "avarageGroup": 0.55
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "n1",
+                "finalAverage": 0.5
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "n2",
+                "finalAverage": 0.6
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "n3",
+                "finalAverage": 0.5
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "n4",
+                "finalAverage": 0.6
+              }
+            ]
+          },
+          {
+            "groupName": "G2",
+            "peopleGroup": {
+              "groupId": "x2",
+              "totalPeople": 50,
+              "answered": 35,
+              "notAnswered": 15,
+              "avarageGroup": 0.6
+            },
+            "answersGroupName": [
+              {
+                "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+                "groupNameId": "o1",
+                "finalAverage": 0.6
+              },
+              {
+                "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+                "groupNameId": "o2",
+                "finalAverage": 0.7
+              },
+              {
+                "groupNameAnswer": "3. SUPORTE E RECURSOS",
+                "groupNameId": "o3",
+                "finalAverage": 0.5
+              },
+              {
+                "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+                "groupNameId": "o4",
+                "finalAverage": 0.6
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
