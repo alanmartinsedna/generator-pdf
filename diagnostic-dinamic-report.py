@@ -316,6 +316,24 @@ def criar_tabela_publico(json_data, table_width):
     style_normal = styles["Normal"]
 
     # =========================
+    # CONFIG DE ESTILO (BASE)
+    # =========================
+    HEADER_FONT_SIZE = 10
+    BODY_FONT_SIZE = 8
+    PADDING_TOP = 4
+    PADDING_BOTTOM = 4
+
+    # =========================
+    # TRECHO 1 - ALTURA HEADER
+    # =========================
+    header_line_height = HEADER_FONT_SIZE + PADDING_TOP + PADDING_BOTTOM
+
+    # =========================
+    # TRECHO 2 - ALTURA BODY
+    # =========================
+    body_line_height = BODY_FONT_SIZE + PADDING_TOP + PADDING_BOTTOM
+
+    # =========================
     # DADOS
     # =========================
     data = [
@@ -368,9 +386,19 @@ def criar_tabela_publico(json_data, table_width):
         col_widths = [table_width / num_cols] * num_cols
 
     # =========================
+    # 🔥 ROW HEIGHTS DINÂMICO
+    # =========================
+    row_heights = [header_line_height] + [body_line_height] * (len(data) - 1)
+
+    # =========================
     # CRIA TABELA
     # =========================
-    table = Table(data, colWidths=col_widths, repeatRows=1)
+    table = Table(
+        data,
+        colWidths=col_widths,
+        rowHeights=row_heights,
+        repeatRows=1
+    )
 
     # =========================
     # ESTILO
@@ -400,15 +428,15 @@ def criar_tabela_publico(json_data, table_width):
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#596CFF")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#FFFFFF")),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('FONTSIZE', (0, 0), (-1, 0), HEADER_FONT_SIZE),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('ALIGN', (0, 0), (0, 0), 'LEFT'),
         ('ALIGN', (1, 0), (-1, 0), 'CENTER'),
-
         # =========================
         # BODY
         # =========================
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 8),
+        ('FONTSIZE', (0, 1), (-1, -1), BODY_FONT_SIZE),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#000000")),
 
         # =========================
@@ -427,8 +455,8 @@ def criar_tabela_publico(json_data, table_width):
         # =========================
         ('LEFTPADDING', (0, 0), (-1, -1), 6),
         ('RIGHTPADDING', (0, 0), (-1, -1), 6),
-        ('TOPPADDING', (0, 0), (-1, -1), 4),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ('TOPPADDING', (0, 0), (-1, -1), PADDING_TOP),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), PADDING_BOTTOM),
 
     ]))
 
