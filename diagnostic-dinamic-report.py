@@ -4,7 +4,7 @@
 
 from reportlab.platypus import (
     BaseDocTemplate, Frame, PageTemplate,
-    Paragraph, Table, TableStyle, Spacer
+    Paragraph, Table, TableStyle, Spacer, Flowable
 )
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
@@ -182,13 +182,16 @@ doc = BaseDocTemplate(
 # =========================
 # FRAME (ÁREA DO CONTEÚDO)
 # =========================
-
+available_doc_width = (A4[0] - (MARGIN_LEFT + MARGIN_RIGHT))
+available_doc_height = (A4[1] - (MARGIN_TOP + MARGIN_BOTTOM + HEADER_BOTTOM_PADDING))
 frame = Frame(
     x1=MARGIN_LEFT,
     y1=MARGIN_BOTTOM,
-    width=A4[0] - (MARGIN_LEFT + MARGIN_RIGHT),
-    height=A4[1] - (MARGIN_TOP + MARGIN_BOTTOM + HEADER_BOTTOM_PADDING),
-    id="main_frame"
+    width=available_doc_width,
+    height=available_doc_height,
+    id="main_frame",
+    leftPadding=0,
+    rightPadding=0,
 )
 
 # =========================
@@ -209,6 +212,98 @@ doc.addPageTemplates([template])
 # =========================
 
 styles = getSampleStyleSheet()
+
+from reportlab.platypus import Flowable
+from reportlab.lib import colors
+
+# # =========================
+# ESTILOS DE BADGES COM TEXTO
+# =========================
+class RoundedBox(Flowable):
+    def __init__(
+        self,
+        text,
+        width,
+        height,
+        radius=10,
+
+        # 🎨 estilo
+        background_color="#596cff",
+        text_color="#FFFFFF",
+
+        # 🔤 fonte
+        font_name="Helvetica-Bold",
+        font_size=10,
+
+        # 📐 alinhamento
+        align_horizontal="left",   # left | center | right
+        align_vertical="middle",  # top | middle | bottom
+
+        # 📦 padding
+        padding_x=6,
+        padding_y=4
+    ):
+        super().__init__()
+
+        self.text = text
+        self.width = width
+        self.height = height
+        self.radius = radius
+
+        self.background_color = background_color
+        self.text_color = text_color
+
+        self.font_name = font_name
+        self.font_size = font_size
+
+        self.align_horizontal = align_horizontal
+        self.align_vertical = align_vertical
+
+        self.padding_x = padding_x
+        self.padding_y = padding_y
+
+    def draw(self):
+        c = self.canv
+
+        # =========================
+        # BACKGROUND
+        # =========================
+        c.setFillColor(colors.HexColor(self.background_color))
+        c.roundRect(0, 0, self.width, self.height, self.radius, fill=1, stroke=0)
+
+        # =========================
+        # TEXTO
+        # =========================
+        c.setFillColor(colors.HexColor(self.text_color))
+        c.setFont(self.font_name, self.font_size)
+
+        # largura do texto
+        text_width = c.stringWidth(self.text, self.font_name, self.font_size)
+
+        # -------------------------
+        # ALINHAMENTO HORIZONTAL
+        # -------------------------
+        if self.align_horizontal == "center":
+            x = ((self.width - text_width) / 2)
+        elif self.align_horizontal == "right":
+            x = self.width - text_width - self.padding_x
+        else:  # left
+            x = self.padding_x
+
+        # -------------------------
+        # ALINHAMENTO VERTICAL
+        # -------------------------
+        if self.align_vertical == "top":
+            y = self.height - self.font_size - self.padding_y
+        elif self.align_vertical == "bottom":
+            y = self.padding_y
+        else:  # middle
+            y = (((self.height - self.font_size) / 2) + (self.font_size * 0.15))
+
+        # -------------------------
+        # DESENHO TEXTO
+        # -------------------------
+        c.drawString(x, y, self.text)
 
 # =========================
 # CONTEÚDO DINÂMICO
@@ -245,7 +340,40 @@ elements.append(
         )
     )
 )
-elements.append(Spacer(1, 20))
+elements.append(Spacer(1, 10))
+elements.append(
+    RoundedBox(
+        text="Respostas entre 11/03/2026 e 19/03/2026",
+        width=200,
+        height=14,
+        radius=7,
+        background_color="#596cff",
+        text_color="#FFFFFF",
+        font_name="Helvetica-Bold",
+        font_size=7,
+        align_horizontal="left",
+        align_vertical="middle",
+        padding_x=20,
+        padding_y=0
+    )
+)
+elements.append(Spacer(1, 40))
+elements.append(
+    RoundedBox(
+        text="Aderência de participação",
+        width=555.27,
+        height=36,
+        radius=0,
+        background_color="#e9ecef",
+        text_color="#596CFF",
+        font_name="Helvetica-Bold",
+        font_size=12,
+        align_horizontal="left",
+        align_vertical="middle",
+        padding_x=20,
+        padding_y=0
+    )
+)
 
 
 
