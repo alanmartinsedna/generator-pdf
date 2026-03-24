@@ -12,7 +12,7 @@ def load_json(caminho):
     with open(caminho, "r", encoding="utf-8") as f:
         return json.load(f)
     
-data_json = load_json("data.json")
+data_json = load_json("data-v2.json")
 
 # =========================
 # CONSTANTES
