@@ -3,6 +3,8 @@
     {
       "diagnosticName": "Diagnóstico de Riscos Psicossociais",
       "diagnosticId": "11111111-aaaa-4a67-aa37-fb7bb7c5361a",
+      "diagnosticStartDate":"25/02/2025",
+      "diagnosticEndDate":"19/06/2025",
       "publicData": {
         "economicGroup": "Grupo Agulhas Negras",
         "economicGroupId": "22222222-bbbb-41db-b2f1-4b1282b2daf1",
@@ -173,6 +175,8 @@
     {
       "diagnosticName": "Diagnóstico Psicossocial",
       "diagnosticId": "44444444-aaaa",
+      "diagnosticStartDate":"28/04/2025",
+      "diagnosticEndDate":"16/11/2025",
       "publicData": {
         "economicGroup": "Grupo Toriba",
         "economicGroupId": "55555555-bbbb",
@@ -279,6 +283,8 @@
     {
       "diagnosticName": "Diagnóstico Psicossocial",
       "diagnosticId": "66666666-cccc",
+      "diagnosticStartDate":"30/10/2025",
+      "diagnosticEndDate":"01/12/2025",
       "publicData": {
         "economicGroup": "Grupo Toriba",
         "economicGroupId": "77777777-dddd",
@@ -321,6 +327,8 @@
     {
       "diagnosticName": "Diagnóstico Psicossocial",
       "diagnosticId": "88888888-eeee",
+      "diagnosticStartDate":"13/05/2025",
+      "diagnosticEndDate":"22/08/2025",
       "publicData": {
         "economicGroup": "Grupo Toyoville",
         "economicGroupId": "99999999-ffff",
@@ -491,6 +499,8 @@
     {
       "diagnosticName": "Diagnóstico Psicossocial",
       "diagnosticId": "aaaaaaaa-1111",
+      "diagnosticStartDate":"02/02/2025",
+      "diagnosticEndDate":"06/10/202",
       "publicData": {
         "economicGroup": "Grupo Toyoville",
         "economicGroupId": "bbbbbbbb-2222",
