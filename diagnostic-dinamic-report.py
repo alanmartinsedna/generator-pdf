@@ -513,11 +513,6 @@ def calc_global_diagnostic_average(json_data):
 # =============================================
 # FUNÇÃO QUE MONTA O CARD FINAL DO DIAGNOSTICO
 # =============================================
-
-from reportlab.platypus import Flowable
-from reportlab.lib import colors
-
-
 class ScoreCard(Flowable):
     def __init__(self, value, value_str, width=130, height=80):
         super().__init__()
@@ -527,15 +522,18 @@ class ScoreCard(Flowable):
         self.width = width
         self.height = height
 
+    def wrap(self, availWidth, availHeight):
+        # 🔥 ISSO AQUI É O SEGREDO
+        return self.width, self.height
+
     def draw(self):
         c = self.canv
 
         # =========================
         # LÓGICA DE COR
         # =========================
-
         if self.value > 100:
-            raise Exception("Erro: o percentual é acima de 100% ( por cento ).")
+            raise Exception("Erro: percentual acima de 100%")
         elif 0 <= self.value <= 20:
             bg = "#ee3650"
             label = "Muito Ruim"
@@ -556,7 +554,7 @@ class ScoreCard(Flowable):
             label = "n/d"
 
         bg_color = colors.HexColor(bg)
-        
+
         # =========================
         # FUNDO
         # =========================
@@ -567,29 +565,40 @@ class ScoreCard(Flowable):
         # CENTRO
         # =========================
         cx = self.width / 2
-        cy = (self.height / 2) - 10
+        cy = self.height / 2
 
         # círculo
         c.setFillColor(colors.white)
-        c.circle(cx, cy, 20, stroke=0, fill=1)
+
+        circle_radius = 20
+        circle_x_position = cx
+        circle_y_position = cy + 8
+
+        c.circle(circle_x_position, circle_y_position, circle_radius, stroke=0, fill=1)
 
         # =========================
-        # TEXTO - VALOR
+        # TEXTO VALOR
         # =========================
         c.setFillColor(bg_color)
         c.setFont("Helvetica-Bold", 11)
-        
         text_width = c.stringWidth(self.value_str, "Helvetica-Bold", 11)
-        c.drawString(cx - text_width / 2, cy - 4, self.value_str)
+
+        text_value_x_position = cx - (text_width / 2)
+        text_value_y_position = cy + 4
+
+        c.drawString(text_value_x_position, text_value_y_position, self.value_str)
 
         # =========================
-        # TEXTO - LABEL
+        # TEXTO LABEL
         # =========================
         c.setFillColor(colors.white)
         c.setFont("Helvetica-Bold", 11)
-
         label_width = c.stringWidth(label, "Helvetica-Bold", 11)
-        c.drawString(cx - label_width / 2, cy + 25, label)
+
+        text_label_x_position = cx - label_width / 2
+        text_label_y_position = cy - 27
+
+        c.drawString(text_label_x_position, text_label_y_position, label)
 
 # =========================
 # CONTEÚDO DINÂMICO
@@ -682,12 +691,14 @@ elements.append(
 )
 elements.append(Spacer(1, 20))
 elements.append(
-    ScoreCard(
-        value=total_global_avarage_diagnostic_number,
-        value_str=total_global_avarage_diagnostic_str
+    Table(
+        [[ScoreCard(total_global_avarage_diagnostic_number, total_global_avarage_diagnostic_str)]],
+        colWidths=[A4[0] - (MARGIN_LEFT + MARGIN_RIGHT)],
+        style=[
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER')
+        ]
     )
 )
-elements.append(Spacer(1, 20))
 
 
 
