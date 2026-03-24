@@ -163,6 +163,38 @@
               "finalAverage": 0.7
             }
           ]
+        },
+        {
+          "groupName": "SEGURANÇA",
+          "peopleGroup": {
+            "groupId": "bwdf796a-8dc7-427b-b291-63324840c8a00",
+            "totalPeople": 327,
+            "answered": 300,
+            "notAnswered": 27,
+            "avarageGroup": 0.925
+          },
+          "answersGroupName": [
+            {
+              "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+              "groupNameId": "70ae62fa-82c5-47e3-9332-0d32775a4e79",
+              "finalAverage": 1.0
+            },
+            {
+              "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+              "groupNameId": "732d5d16-5d77-4687-bca0-9168d48039af",
+              "finalAverage": 0.95
+            },
+            {
+              "groupNameAnswer": "3. SUPORTE E RECURSOS",
+              "groupNameId": "430a4e77-7521-4699-8683-c51f8e912c1c",
+              "finalAverage": 0.95
+            },
+            {
+              "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+              "groupNameId": "b3c39c9b-9608-4512-8554-22e415af0679",
+              "finalAverage": 0.7
+            }
+          ]
         }
       ]
     }
