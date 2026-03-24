@@ -9,6 +9,17 @@ from reportlab.platypus import (
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+import json
+
+# =========================
+# CARREGAR DADOS
+# =========================
+
+def load_json(caminho):
+    with open(caminho, "r", encoding="utf-8") as f:
+        return json.load(f)
+    
+data_json = load_json("data.json")
 
 # =========================
 # CONSTANTES
@@ -362,12 +373,12 @@ elements.append(
     RoundedBox(
         text="Aderência de participação",
         width=555.27,
-        height=36,
+        height=28,
         radius=0,
         background_color="#e9ecef",
         text_color="#596CFF",
-        font_name="Helvetica-Bold",
-        font_size=12,
+        font_name="Helvetica",
+        font_size=14,
         align_horizontal="left",
         align_vertical="middle",
         padding_x=20,
