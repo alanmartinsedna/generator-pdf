@@ -487,14 +487,123 @@ def calc_global_adherence_average(json_data):
     return formated_adherence
 
 # =========================
+# FUNÇÃO CALCULO MEDIA GERAL DO DIAGNOSTICO
+# =========================
+
+def calc_global_diagnostic_average(json_data):
+    total_avarage_sum = 0
+
+    for report in json_data.get("reportData", []):
+        public_groups = report.get("public_groups", [])
+        quantity_groups = len(public_groups)
+        for group in public_groups:
+            people = group.get("peopleGroup", {})
+            total_avarage_group = people.get("avarageGroup", 0)
+            total_avarage_sum += total_avarage_group
+
+    if quantity_groups < 0:
+        raise Exception("Erro: total de GRUPOS é MENOR OU IGUAL a zero.")
+    
+    total_avarage_result = ((total_avarage_sum / quantity_groups) * 100)
+
+    formated_total_avarage_result = f'{total_avarage_result:.1f}%'
+
+    return total_avarage_result, formated_total_avarage_result
+
+# =============================================
+# FUNÇÃO QUE MONTA O CARD FINAL DO DIAGNOSTICO
+# =============================================
+
+from reportlab.platypus import Flowable
+from reportlab.lib import colors
+
+
+class ScoreCard(Flowable):
+    def __init__(self, value, value_str, width=130, height=80):
+        super().__init__()
+
+        self.value = value
+        self.value_str = value_str
+        self.width = width
+        self.height = height
+
+    def draw(self):
+        c = self.canv
+
+        # =========================
+        # LÓGICA DE COR
+        # =========================
+
+        if self.value > 100:
+            raise Exception("Erro: o percentual é acima de 100% ( por cento ).")
+        elif 0 <= self.value <= 20:
+            bg = "#ee3650"
+            label = "Muito Ruim"
+        elif self.value <= 40:
+            bg = "#f4b184"
+            label = "Ruim"
+        elif self.value <= 60:
+            bg = "#ffd656"
+            label = "Razoável"
+        elif self.value <= 80:
+            bg = "#c3dfa5"
+            label = "Bom"
+        elif self.value <= 100:
+            bg = "#2f6e2d"
+            label = "Excelente"
+        else:
+            bg = "#adadad"
+            label = "n/d"
+
+        bg_color = colors.HexColor(bg)
+        
+        # =========================
+        # FUNDO
+        # =========================
+        c.setFillColor(bg_color)
+        c.roundRect(0, 0, self.width, self.height, 5, fill=1, stroke=0)
+
+        # =========================
+        # CENTRO
+        # =========================
+        cx = self.width / 2
+        cy = (self.height / 2) - 10
+
+        # círculo
+        c.setFillColor(colors.white)
+        c.circle(cx, cy, 20, stroke=0, fill=1)
+
+        # =========================
+        # TEXTO - VALOR
+        # =========================
+        c.setFillColor(bg_color)
+        c.setFont("Helvetica-Bold", 11)
+        
+        text_width = c.stringWidth(self.value_str, "Helvetica-Bold", 11)
+        c.drawString(cx - text_width / 2, cy - 4, self.value_str)
+
+        # =========================
+        # TEXTO - LABEL
+        # =========================
+        c.setFillColor(colors.white)
+        c.setFont("Helvetica-Bold", 11)
+
+        label_width = c.stringWidth(label, "Helvetica-Bold", 11)
+        c.drawString(cx - label_width / 2, cy + 25, label)
+
+# =========================
 # CONTEÚDO DINÂMICO
 # =========================
 
 elements = []
 table = criar_tabela_publico(data_json, table_width=frame._width)
+total_global_avarage_diagnostic_main = calc_global_diagnostic_average(data_json)
+total_global_avarage_diagnostic_number = total_global_avarage_diagnostic_main[0]
+total_global_avarage_diagnostic_str = total_global_avarage_diagnostic_main[1]
 
 # =======================================================================================
 # "------------⬇️------ INICIO DO BLOCO PARA CONTEUDO DO RELATORIO ------⬇️------------"
+
 style = ParagraphStyle(...)
 
 elements.append(
@@ -571,6 +680,14 @@ elements.append(
         )
     )
 )
+elements.append(Spacer(1, 20))
+elements.append(
+    ScoreCard(
+        value=total_global_avarage_diagnostic_number,
+        value_str=total_global_avarage_diagnostic_str
+    )
+)
+elements.append(Spacer(1, 20))
 
 
 
