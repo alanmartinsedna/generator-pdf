@@ -242,6 +242,8 @@ elements = []
 
     table = Table(data, repeatRows=1)
 
+    ➡️ ('COMANDO', (col_ini, row_ini), (col_fim, row_fim), valor)
+
     table.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
         ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
