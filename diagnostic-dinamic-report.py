@@ -1,11 +1,4 @@
-# =========================
-# IMPORTS
-# =========================
-
-from reportlab.platypus import (
-    BaseDocTemplate, Frame, PageTemplate,
-    Paragraph, Table, TableStyle, Spacer, Flowable
-)
+from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, Paragraph, Table, TableStyle, Spacer, Flowable
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -224,9 +217,6 @@ doc.addPageTemplates([template])
 
 styles = getSampleStyleSheet()
 
-from reportlab.platypus import Flowable
-from reportlab.lib import colors
-
 # # =========================
 # ESTILOS DE BADGES COM TEXTO
 # =========================
@@ -317,10 +307,139 @@ class RoundedBox(Flowable):
         c.drawString(x, y, self.text)
 
 # =========================
+# MONTA A TABELA DE PUBLICO
+# =========================
+
+def criar_tabela_publico(json_data, table_width):
+
+    styles = getSampleStyleSheet()
+    style_normal = styles["Normal"]
+
+    # =========================
+    # DADOS
+    # =========================
+    data = [
+        [
+            "Grupo",
+            "Total",
+            "Respondidas",
+            "Não Respondidas",
+            "Aderência (%)"
+        ]
+    ]
+
+    for report in json_data.get("reportData", []):
+        for group in report.get("public_groups", []):
+
+            group_name = group.get("groupName", "")
+
+            people = group.get("peopleGroup", {})
+            total = people.get("totalPeople", 0)
+            answered = people.get("answered", 0)
+            not_answered = people.get("notAnswered", 0)
+
+            if total > 0:
+                adherence = f"{(answered / total) * 100:.2f}%"
+            else:
+                adherence = "0%"
+
+            data.append([
+                str(group_name),
+                str(total),
+                str(answered),
+                str(not_answered),
+                str(adherence),
+            ])
+
+    # =========================
+    # LARGURA DAS COLUNAS
+    # =========================
+    num_cols = len(data[0])
+
+    col_widths = [
+        table_width * 0.30,
+        table_width * 0.15,
+        table_width * 0.15,
+        table_width * 0.20,
+        table_width * 0.20,
+    ]
+
+    if len(col_widths) != num_cols:
+        col_widths = [table_width / num_cols] * num_cols
+
+    # =========================
+    # CRIA TABELA
+    # =========================
+    table = Table(data, colWidths=col_widths, repeatRows=1)
+
+    # =========================
+    # ESTILO
+    # =========================
+    '''
+        ➡️ LEGENDA DE CONFIGURAÇÃO DA TABELA
+
+        📌 COORDENADAS
+            ➡️ ('COMANDO', (col_ini, row_ini), (col_fim, row_fim), valor)
+            ➡️ A tabela funciona como uma matriz: (coluna, linha)
+            ➡️ (0,0) = primeira célula (topo esquerdo)
+
+        📌 ÍNDICES ESPECIAIS
+            ➡️ -1 = último índice
+        
+        📊 EXEMPLO
+            ➡️ (0, 0) → primeira coluna, primeira linha
+            ➡️ (-1, 0) → última coluna, primeira linha
+            ➡️ (0, -1) → primeira coluna, última linha
+            ➡️ (-1, -1) → última coluna, última linha = RESULTADO ➡️ tabela inteira
+    '''
+    table.setStyle(TableStyle([
+
+        # =========================
+        # HEADER
+        # =========================
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#596CFF")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#FFFFFF")),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('ALIGN', (0, 0), (0, 0), 'LEFT'),
+        ('ALIGN', (1, 0), (-1, 0), 'CENTER'),
+
+        # =========================
+        # BODY
+        # =========================
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 8),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#000000")),
+
+        # =========================
+        # ALINHAMENTO
+        # =========================
+        ('ALIGN', (1, 1), (-1, -1), 'CENTER'),
+        ('ALIGN', (0, 1), (0, -1), 'LEFT'),
+
+        # =========================
+        # GRID
+        # =========================
+        ('GRID', (0, 0), (-1, -1), 0.3, colors.HexColor("#596CFF")),
+
+        # =========================
+        # PADDING
+        # =========================
+        ('LEFTPADDING', (0, 0), (-1, -1), 6),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 6),
+        ('TOPPADDING', (0, 0), (-1, -1), 4),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+
+    ]))
+
+    return table
+
+# =========================
 # CONTEÚDO DINÂMICO
 # =========================
 
 elements = []
+table = criar_tabela_publico(data_json, table_width=frame._width)
 
 # =======================================================================================
 # "------------⬇️------ INICIO DO BLOCO PARA CONTEUDO DO RELATORIO ------⬇️------------"
@@ -378,14 +497,15 @@ elements.append(
         background_color="#e9ecef",
         text_color="#596CFF",
         font_name="Helvetica",
-        font_size=14,
+        font_size=12,
         align_horizontal="left",
         align_vertical="middle",
         padding_x=20,
         padding_y=0
     )
 )
-
+elements.append(Spacer(1, 10))
+elements.append(table)
 
 
 
