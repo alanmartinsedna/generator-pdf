@@ -320,8 +320,8 @@ def criar_tabela_publico(json_data, table_width):
     # =========================
     HEADER_FONT_SIZE = 10
     BODY_FONT_SIZE = 8
-    PADDING_TOP = 4
-    PADDING_BOTTOM = 4
+    PADDING_TOP = 5
+    PADDING_BOTTOM = 5
 
     # =========================
     # TRECHO 1 - ALTURA HEADER
