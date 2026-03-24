@@ -12,7 +12,7 @@ def load_json(caminho):
     with open(caminho, "r", encoding="utf-8") as f:
         return json.load(f)
     
-data_json = load_json("data-v2.json")
+data_json = load_json("data.json")
 
 # =========================
 # CONSTANTES
@@ -463,6 +463,30 @@ def criar_tabela_publico(json_data, table_width):
     return table
 
 # =========================
+# FUNÇÃO CALCULO MEDIA GERAL DE ADERENCIA
+# =========================
+
+def calc_global_adherence_average(json_data):
+    total_people_sum = 0
+    total_answered_sum = 0
+
+    for report in json_data.get("reportData", []):
+        public_groups = report.get("public_groups", [])
+        for group in public_groups:
+            people = group.get("peopleGroup", {})
+            total = people.get("totalPeople", 0)
+            answered = people.get("answered", 0)
+            total_people_sum += total
+            total_answered_sum += answered
+
+    if total_people_sum == 0:
+        raise Exception("Erro: total de pessoas é zero.")
+
+    global_adherence = (total_answered_sum / total_people_sum) * 100
+    formated_adherence = f"Média geral da aderência de participação {global_adherence:.2f}%"
+    return formated_adherence
+
+# =========================
 # CONTEÚDO DINÂMICO
 # =========================
 
@@ -534,6 +558,19 @@ elements.append(
 )
 elements.append(Spacer(1, 10))
 elements.append(table)
+elements.append(Spacer(1, 20))
+elements.append(
+    Paragraph(
+        calc_global_adherence_average(data_json),
+        ParagraphStyle(
+            name="Custom",
+            fontName="Helvetica-Bold",  # weight 400
+            fontSize=16,
+            textColor=colors.HexColor('#596CFF'),
+            alignment=0  # left
+        )
+    )
+)
 
 
 
