@@ -12,7 +12,7 @@ def load_json(caminho):
     with open(caminho, "r", encoding="utf-8") as f:
         return json.load(f)
     
-data_json = load_json("data.json")
+data_json = load_json("data-v3.json")
 
 # =========================
 # CONSTANTES
@@ -601,84 +601,73 @@ class ScoreCard(Flowable):
         c.drawString(text_label_x_position, text_label_y_position, label)
 
 # =============================================
-# FUNCAO CALCULA MEDIAS DOS GRUPOS DE PERGUNTAS
+# FUNÇÃO CALCULA MÉDIA DOS GRUPOS DE PERGUNTAS
 # =============================================
-from pprint import pprint
+
 def calc_global_average_question_group(json_data):
-    total_sum_question_group_1 = 0
-    total_sum_question_group_2 = 0
-    total_sum_question_group_3 = 0
-    total_sum_question_group_4 = 0
-    total_sum_value_by_group = []
+
+    # Dicionário acumulador dinâmico
+    # Estrutura:
+    # {
+    #     "Nome do Grupo 1": soma_total,
+    #     "Nome do Grupo 2": soma_total,
+    # }
+    group_totals = {}
+
+    quantity_public_groups = 0
+
+    # =========================
+    # PERCORRE REPORTS
+    # =========================
     for report in json_data.get("reportData", []):
-        # Loop percorre pela listagem de grupos
+
         public_groups = report.get("public_groups", [])
-        # Quantidade de grupos
-        quantity_public_groups = len(public_groups)
-        print('\n')
-        print(f'quantity_public_groups = {quantity_public_groups}')
-        print('\n')
+
+        # Conta total de grupos de público
+        quantity_public_groups += len(public_groups)
+
+        # =========================
+        # PERCORRE GRUPOS DE PÚBLICO
+        # =========================
         for public_group_item in public_groups:
-            # Acessa a listagem dos grupos de perguntas
-            public_group_question_list = public_group_item.get('answersGroupName', [])
-            
-            # Cada índice corresponde a um grupo de pergunta,
-            # E faz a soma da nota final de cada grupos de perrgunta dos diferentes grupos de publicos
-            total_sum_question_group_1 += public_group_question_list[0]["finalAverage"]
-            total_sum_question_group_2 += public_group_question_list[1]["finalAverage"]
-            total_sum_question_group_3 += public_group_question_list[2]["finalAverage"]
-            total_sum_question_group_4 += public_group_question_list[3]["finalAverage"]
 
-        # Mostra o resultado final da soma de cada grupo de pergunta dos diferentes grupos de publico
-        print("Soma do grupo de pergunta 1 =", total_sum_question_group_1)
-        print("Soma do grupo de pergunta 2 =", total_sum_question_group_2)
-        print("Soma do grupo de pergunta 3 =", total_sum_question_group_3)
-        print("Soma do grupo de pergunta 4 =", total_sum_question_group_4)
+            answers_group_list = public_group_item.get("answersGroupName", [])
 
-        # Validação de calculo de media, caso a quantidade de grupos for maior que 1, 
-        # A validação calcula a media media = ( resultado da soma / quantidade de grupos )
-        if quantity_public_groups < 0:
-            raise Exception('Error: Está vazia a lista do(s) grupo(s) de publico(s) do diagnóstico')
-        elif quantity_public_groups > 1:
-            total_sum_question_group_1 = ( total_sum_question_group_1 / quantity_public_groups )
-            total_sum_question_group_2 = ( total_sum_question_group_2 / quantity_public_groups )
-            total_sum_question_group_3 = ( total_sum_question_group_3 / quantity_public_groups )
-            total_sum_question_group_4 = ( total_sum_question_group_4 / quantity_public_groups )
-        else:
-            total_sum_question_group_1 = total_sum_question_group_1
-            total_sum_question_group_2 = total_sum_question_group_2
-            total_sum_question_group_3 = total_sum_question_group_3
-            total_sum_question_group_4 = total_sum_question_group_4
+            # =========================
+            # PERCORRE GRUPOS DE PERGUNTAS (DINÂMICO)
+            # =========================
+            for question_group in answers_group_list:
+                group_name = question_group.get("groupNameAnswer", "Sem Nome")
+                final_average = question_group.get("finalAverage", 0)
 
-        if public_group_item == public_groups[-1]:
-            print("Este é o última iteração do loop")
-            print("MÉDIA FINAL do grupo de pergunta 1 =", total_sum_question_group_1)
-            print("MÉDIA FINAL do grupo de pergunta 2 =", total_sum_question_group_2)
-            print("MÉDIA FINAL do grupo de pergunta 3 =", total_sum_question_group_3)
-            print("MÉDIA FINAL do grupo de pergunta 4 =", total_sum_question_group_4)
+                # Soma acumulada por nome do grupo
+                if group_name not in group_totals:
+                    group_totals[group_name] = 0
 
-        # Monta a lista final no formato solicitado
-        total_sum_value_by_group.append({
-            "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
-            "totalValueAverage": total_sum_question_group_1
+                group_totals[group_name] += final_average
+
+    # =========================
+    # VALIDAÇÃO
+    # =========================
+    if quantity_public_groups <= 0:
+        raise Exception(
+            "Erro: Não existem grupos de público para calcular a média."
+        )
+
+    # =========================
+    # CALCULA MÉDIA FINAL
+    # =========================
+    result_list = []
+
+    for group_name, total_sum in group_totals.items():
+        average = total_sum / quantity_public_groups
+
+        result_list.append({
+            "groupNameAnswer": group_name,
+            "totalValueAverage": average
         })
 
-        total_sum_value_by_group.append({
-            "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
-            "totalValueAverage": total_sum_question_group_2
-        })
-
-        total_sum_value_by_group.append({
-            "groupNameAnswer": "3. SUPORTE E RECURSOS",
-            "totalValueAverage": total_sum_question_group_3
-        })
-
-        total_sum_value_by_group.append({
-            "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
-            "totalValueAverage": total_sum_question_group_4
-        })
-
-        return total_sum_value_by_group
+    return result_list
 
 # =========================
 # CONTEÚDO DINÂMICO
