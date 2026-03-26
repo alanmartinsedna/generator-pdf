@@ -12,7 +12,7 @@ def load_json(caminho):
     with open(caminho, "r", encoding="utf-8") as f:
         return json.load(f)
     
-data_json = load_json("data-v3.json")
+data_json = load_json("data.json")
 
 # =========================
 # CONSTANTES
@@ -600,6 +600,119 @@ class ScoreCard(Flowable):
 
         c.drawString(text_label_x_position, text_label_y_position, label)
 
+# =============================================
+# FUNCAO CALCULA MEDIAS DOS GRUPOS DE PERGUNTAS
+# =============================================
+from pprint import pprint
+def calc_global_average_question_group(json_data):
+    total_sum_question_group_1 = 0
+    total_sum_question_group_2 = 0
+    total_sum_question_group_3 = 0
+    total_sum_question_group_4 = 0
+    total_sum_value_by_group = []
+    for report in json_data.get("reportData", []):
+        # Loop percorre pela listagem de grupos
+        public_groups = report.get("public_groups", [])
+        # Quantidade de grupos
+        quantity_public_groups = len(public_groups)
+        print('\n')
+        print(f'quantity_public_groups = {quantity_public_groups}')
+        print('\n')
+        for public_group_item in public_groups:
+            # Acessa a listagem dos grupos de perguntas
+            public_group_question_list = public_group_item.get('answersGroupName', [])
+            
+            # Cada índice corresponde a um grupo de pergunta,
+            # E faz a soma da nota final de cada grupos de perrgunta dos diferentes grupos de publicos
+            total_sum_question_group_1 += public_group_question_list[0]["finalAverage"]
+            total_sum_question_group_2 += public_group_question_list[1]["finalAverage"]
+            total_sum_question_group_3 += public_group_question_list[2]["finalAverage"]
+            total_sum_question_group_4 += public_group_question_list[3]["finalAverage"]
+
+        # Mostra o resultado final da soma de cada grupo de pergunta dos diferentes grupos de publico
+        print("Soma do grupo de pergunta 1 =", total_sum_question_group_1)
+        print("Soma do grupo de pergunta 2 =", total_sum_question_group_2)
+        print("Soma do grupo de pergunta 3 =", total_sum_question_group_3)
+        print("Soma do grupo de pergunta 4 =", total_sum_question_group_4)
+
+        # Validação para caso a soma de maior que 1 retorna 1, caso a soma der menor ou igual a 1 retorna a soma
+        if total_sum_question_group_1 > 1:
+            total_sum_question_group_1 = 1
+        else:
+            total_sum_question_group_1 = total_sum_question_group_1
+
+        # Validação para caso a soma de maior que 1 retorna 1, caso a soma der menor ou igual a 1 retorna a soma
+        if total_sum_question_group_2 > 1:
+            total_sum_question_group_2 = 1
+        else:
+            total_sum_question_group_2 = total_sum_question_group_2
+
+        # Validação para caso a soma de maior que 1 retorna 1, caso a soma der menor ou igual a 1 retorna a soma
+        if total_sum_question_group_3 > 1:
+            total_sum_question_group_3 = 1
+        else:
+            total_sum_question_group_3 = total_sum_question_group_3
+
+        # Validação para caso a soma de maior que 1 retorna 1, caso a soma der menor ou igual a 1 retorna a soma
+        if total_sum_question_group_4 > 1:
+            total_sum_question_group_4 = 1
+        else:
+            total_sum_question_group_4 = total_sum_question_group_4
+        
+        # Imprime o valor
+        print("APÓS VALIDAÇÃO Soma do grupo de pergunta 1 =", total_sum_question_group_1)
+        print("APÓS VALIDAÇÃO Soma do grupo de pergunta 2 =", total_sum_question_group_2)
+        print("APÓS VALIDAÇÃO Soma do grupo de pergunta 3 =", total_sum_question_group_3)
+        print("APÓS VALIDAÇÃO Soma do grupo de pergunta 4 =", total_sum_question_group_4)
+
+        # Validação de calculo de media, caso a quantidade de grupos for maior que 1, 
+        # A validação calcula a media media = ( resultado da soma / quantidade de grupos )
+        if quantity_public_groups < 0:
+            raise Exception('Error: Está vazia a lista do(s) grupo(s) de publico(s) do diagnóstico')
+        elif quantity_public_groups > 1:
+            total_sum_question_group_1 = ( total_sum_question_group_1 / quantity_public_groups )
+            total_sum_question_group_2 = ( total_sum_question_group_2 / quantity_public_groups )
+            total_sum_question_group_3 = ( total_sum_question_group_3 / quantity_public_groups )
+            total_sum_question_group_4 = ( total_sum_question_group_4 / quantity_public_groups )
+        else:
+            total_sum_question_group_1 = total_sum_question_group_1
+            total_sum_question_group_2 = total_sum_question_group_2
+            total_sum_question_group_3 = total_sum_question_group_3
+            total_sum_question_group_4 = total_sum_question_group_4
+
+        
+        if public_group_item == public_groups[-1]:
+            print("Este é o última iteração do loop")
+            print("MÉDIA FINAL do grupo de pergunta 1 =", total_sum_question_group_1)
+            print("MÉDIA FINAL do grupo de pergunta 2 =", total_sum_question_group_2)
+            print("MÉDIA FINAL do grupo de pergunta 3 =", total_sum_question_group_3)
+            print("MÉDIA FINAL do grupo de pergunta 4 =", total_sum_question_group_4)
+
+
+        # Monta a lista final no formato solicitado
+        total_sum_value_by_group.append({
+            "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
+            "totalValueAverage": total_sum_question_group_1
+        })
+
+        total_sum_value_by_group.append({
+            "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
+            "totalValueAverage": total_sum_question_group_2
+        })
+
+        total_sum_value_by_group.append({
+            "groupNameAnswer": "3. SUPORTE E RECURSOS",
+            "totalValueAverage": total_sum_question_group_3
+        })
+
+        total_sum_value_by_group.append({
+            "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
+            "totalValueAverage": total_sum_question_group_4
+        })
+
+        return total_sum_value_by_group
+
+
 # =========================
 # CONTEÚDO DINÂMICO
 # =========================
@@ -609,6 +722,8 @@ table = criar_tabela_publico(data_json, table_width=frame._width)
 total_global_avarage_diagnostic_main = calc_global_diagnostic_average(data_json)
 total_global_avarage_diagnostic_number = total_global_avarage_diagnostic_main[0]
 total_global_avarage_diagnostic_str = total_global_avarage_diagnostic_main[1]
+
+calc_global_average_question_group(data_json)
 
 # =======================================================================================
 # "------------⬇️------ INICIO DO BLOCO PARA CONTEUDO DO RELATORIO ------⬇️------------"
