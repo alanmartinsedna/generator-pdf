@@ -635,36 +635,6 @@ def calc_global_average_question_group(json_data):
         print("Soma do grupo de pergunta 3 =", total_sum_question_group_3)
         print("Soma do grupo de pergunta 4 =", total_sum_question_group_4)
 
-        # Validação para caso a soma de maior que 1 retorna 1, caso a soma der menor ou igual a 1 retorna a soma
-        if total_sum_question_group_1 > 1:
-            total_sum_question_group_1 = 1
-        else:
-            total_sum_question_group_1 = total_sum_question_group_1
-
-        # Validação para caso a soma de maior que 1 retorna 1, caso a soma der menor ou igual a 1 retorna a soma
-        if total_sum_question_group_2 > 1:
-            total_sum_question_group_2 = 1
-        else:
-            total_sum_question_group_2 = total_sum_question_group_2
-
-        # Validação para caso a soma de maior que 1 retorna 1, caso a soma der menor ou igual a 1 retorna a soma
-        if total_sum_question_group_3 > 1:
-            total_sum_question_group_3 = 1
-        else:
-            total_sum_question_group_3 = total_sum_question_group_3
-
-        # Validação para caso a soma de maior que 1 retorna 1, caso a soma der menor ou igual a 1 retorna a soma
-        if total_sum_question_group_4 > 1:
-            total_sum_question_group_4 = 1
-        else:
-            total_sum_question_group_4 = total_sum_question_group_4
-        
-        # Imprime o valor
-        print("APÓS VALIDAÇÃO Soma do grupo de pergunta 1 =", total_sum_question_group_1)
-        print("APÓS VALIDAÇÃO Soma do grupo de pergunta 2 =", total_sum_question_group_2)
-        print("APÓS VALIDAÇÃO Soma do grupo de pergunta 3 =", total_sum_question_group_3)
-        print("APÓS VALIDAÇÃO Soma do grupo de pergunta 4 =", total_sum_question_group_4)
-
         # Validação de calculo de media, caso a quantidade de grupos for maior que 1, 
         # A validação calcula a media media = ( resultado da soma / quantidade de grupos )
         if quantity_public_groups < 0:
@@ -680,14 +650,12 @@ def calc_global_average_question_group(json_data):
             total_sum_question_group_3 = total_sum_question_group_3
             total_sum_question_group_4 = total_sum_question_group_4
 
-        
         if public_group_item == public_groups[-1]:
             print("Este é o última iteração do loop")
             print("MÉDIA FINAL do grupo de pergunta 1 =", total_sum_question_group_1)
             print("MÉDIA FINAL do grupo de pergunta 2 =", total_sum_question_group_2)
             print("MÉDIA FINAL do grupo de pergunta 3 =", total_sum_question_group_3)
             print("MÉDIA FINAL do grupo de pergunta 4 =", total_sum_question_group_4)
-
 
         # Monta a lista final no formato solicitado
         total_sum_value_by_group.append({
@@ -711,7 +679,6 @@ def calc_global_average_question_group(json_data):
         })
 
         return total_sum_value_by_group
-
 
 # =========================
 # CONTEÚDO DINÂMICO
