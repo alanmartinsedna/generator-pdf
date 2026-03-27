@@ -1,4 +1,4 @@
-from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, Paragraph, Table, TableStyle, Spacer, Flowable
+from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, Paragraph, Table, TableStyle, Spacer, Flowable, ListFlowable, ListItem
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -661,10 +661,10 @@ def calc_global_average_question_group(json_data):
 
     for group_name, total_sum in group_totals.items():
         average = total_sum / quantity_public_groups
-
+        formated_average = ( average * 100 )
         result_list.append({
             "groupNameAnswer": group_name,
-            "totalValueAverage": average
+            "totalValueAverage": formated_average
         })
 
     return result_list
@@ -770,6 +770,8 @@ elements.append(
         ]
     )
 )
+elements.append(Spacer(1, 20))
+
 
 
 
