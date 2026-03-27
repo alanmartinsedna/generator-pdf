@@ -12,7 +12,7 @@ def load_json(caminho):
     with open(caminho, "r", encoding="utf-8") as f:
         return json.load(f)
     
-data_json = load_json("data-v3.json")
+data_json = load_json("data-v2.json")
 
 # =========================
 # CONSTANTES
@@ -690,7 +690,6 @@ settings_style_map = {
         spaceAfter=12,
         spaceBefore=6,
     ),
-
     "h2": ParagraphStyle(
         name="H2",
         parent=styles["Normal"],
@@ -700,7 +699,6 @@ settings_style_map = {
         spaceAfter=9,
         spaceBefore=6,
     ),
-
     "h3": ParagraphStyle(
         name="H3",
         parent=styles["Normal"],
@@ -710,7 +708,6 @@ settings_style_map = {
         spaceAfter=7,
         spaceBefore=5,
     ),
-
     "h4": ParagraphStyle(
         name="H4",
         parent=styles["Normal"],
@@ -720,7 +717,6 @@ settings_style_map = {
         spaceAfter=6,
         spaceBefore=4,
     ),
-
     "h5": ParagraphStyle(
         name="H5",
         parent=styles["Normal"],
@@ -730,7 +726,6 @@ settings_style_map = {
         spaceAfter=5,
         spaceBefore=4,
     ),
-
     "h6": ParagraphStyle(
         name="H6",
         parent=styles["Normal"],
@@ -796,14 +791,12 @@ settings_list_map = {
         "bulletFontName": "Helvetica",
         "bulletFontSize": 12,
     },
-
     "ol": {
         "bulletType": "1",  # numerada
         "leftIndent": 20,
         "bulletFontName": "Helvetica",
         "bulletFontSize": 12,
     },
-
     "li_style": ParagraphStyle(
         name="LI",
         parent=styles["Normal"],
@@ -815,6 +808,183 @@ settings_list_map = {
 }
 
 # =========================
+# FUNCAO BUSCA RECOMENDAÇÃO
+# =========================
+def get_recommendation_by_score(data_json, average_questions_groups_list):
+
+    result_recommendation_list = []
+    data_recommendation_list = data_json.get("dataRecommendation", [])
+
+    for average_group_item in average_questions_groups_list:
+
+        group_name_answer = average_group_item.get("groupNameAnswer")
+        group_average = average_group_item.get("totalValueAverage")
+
+        if group_name_answer is None or group_average is None:
+            continue
+
+        for recommendation_group in data_recommendation_list:
+
+            label_group = recommendation_group.get("label")
+
+            # Verifica se o label corresponde ao nome do grupo
+            if not label_group:
+                continue
+
+            if label_group.strip().upper() == group_name_answer.strip().upper():
+
+                meta = recommendation_group.get("meta", {})
+                recommendations_list = meta.get("recommendations", [])
+
+                for recommendation_item in recommendations_list:
+
+                    start_value = recommendation_item.get("start")
+                    end_value = recommendation_item.get("end")
+
+                    if start_value is None or end_value is None:
+                        continue
+
+                    if start_value <= group_average <= end_value:
+
+                        result_recommendation_list.append({
+                            "label": label_group,
+                            "concept": recommendation_item.get("concept"),
+                            "recommendations": recommendation_item.get("recommendations")
+                        })
+
+                        break  # encontrou a recomendação correta
+
+                break  # encontrou o agrupador correto
+
+    return result_recommendation_list
+
+# =========================
+# FUNÇÃO DE LIMPEZA DE HTML E FORMATAÇÃO DE TEXTO
+# =========================
+
+def build_flowables_from_html(html_content, settings_style_map, settings_list_map):
+
+    from reportlab.platypus import Paragraph, Spacer, ListFlowable, ListItem
+    from reportlab.lib.units import cm
+    from html.parser import HTMLParser
+    import html as html_lib
+
+    flowables = []
+
+    if not html_content:
+        return flowables
+
+    # =========================
+    # 1️⃣ Decodifica entidades HTML
+    # =========================
+    html_content = html_lib.unescape(html_content)
+
+    # =========================
+    # Parser customizado
+    # =========================
+    class SimpleHTMLParser(HTMLParser):
+
+        def __init__(self):
+            super().__init__()
+            self.current_tag = None
+            self.current_data = ""
+            self.list_stack = []
+            self.list_items = []
+            self.capture_li = False
+
+        # =========================
+        # TAG ABERTA
+        # =========================
+        def handle_starttag(self, tag, attrs):
+            tag = tag.lower()
+
+            if tag in settings_style_map:
+                self.current_tag = tag
+                self.current_data = ""
+
+            elif tag in ["ul", "ol"]:
+                self.list_stack.append(tag)
+                self.list_items = []
+
+            elif tag == "li":
+                self.capture_li = True
+                self.current_data = ""
+
+        # =========================
+        # TEXTO
+        # =========================
+        def handle_data(self, data):
+            if self.current_tag or self.capture_li:
+                self.current_data += data
+
+        # =========================
+        # TAG FECHADA
+        # =========================
+        def handle_endtag(self, tag):
+            tag = tag.lower()
+
+            # =========================
+            # FINALIZA PARÁGRAFOS / HEADINGS
+            # =========================
+            if tag == self.current_tag and self.current_data.strip():
+
+                style = settings_style_map.get(tag, settings_style_map.get("p"))
+                flowables.append(Paragraph(self.current_data.strip(), style))
+                flowables.append(Spacer(1, 0.2 * cm))
+
+                self.current_tag = None
+                self.current_data = ""
+
+            # =========================
+            # FINALIZA ITEM DE LISTA
+            # =========================
+            elif tag == "li" and self.capture_li:
+
+                text = self.current_data.strip()
+
+                if text:
+                    li_paragraph = Paragraph(
+                        text,
+                        settings_list_map["li_style"]
+                    )
+                    self.list_items.append(ListItem(li_paragraph))
+
+                self.capture_li = False
+                self.current_data = ""
+
+            # =========================
+            # FINALIZA LISTA
+            # =========================
+            elif tag in ["ul", "ol"] and self.list_items:
+
+                list_config = settings_list_map.get(tag, {})
+
+                flowables.append(
+                    ListFlowable(
+                        self.list_items,
+                        bulletType=list_config.get("bulletType", "bullet"),
+                        leftIndent=list_config.get("leftIndent", 20),
+                        bulletFontName=list_config.get("bulletFontName", "Helvetica"),
+                        bulletFontSize=list_config.get("bulletFontSize", 12),
+                    )
+                )
+
+                flowables.append(Spacer(1, 0.3 * cm))
+
+                self.list_items = []
+                if self.list_stack:
+                    self.list_stack.pop()
+
+    # =========================
+    # Executa Parser
+    # =========================
+    parser = SimpleHTMLParser()
+    parser.feed(html_content)
+
+    return flowables
+
+
+# =========================
 # CONTEÚDO DINÂMICO
 # =========================
 
@@ -824,8 +994,9 @@ total_global_avarage_diagnostic_main = calc_global_diagnostic_average(data_json)
 total_global_avarage_diagnostic_number = total_global_avarage_diagnostic_main[0]
 total_global_avarage_diagnostic_str = total_global_avarage_diagnostic_main[1]
 
-calc_global_average_question_group(data_json)
+# calc_global_average_question_group(data_json)
 
+# get_recommendation_by_score(data_json, calc_global_average_question_group(data_json))
 # =======================================================================================
 # "------------⬇️------ INICIO DO BLOCO PARA CONTEUDO DO RELATORIO ------⬇️------------"
 
@@ -916,6 +1087,39 @@ elements.append(
     )
 )
 elements.append(Spacer(1, 20))
+result_recommendation_list = get_recommendation_by_score(
+    data_json,
+    calc_global_average_question_group(data_json)
+)
+
+for item in result_recommendation_list:
+
+    # 1️⃣ Nome do grupo (label)
+    elements.append(
+        Paragraph(item["label"], settings_style_map["h2"])
+    )
+    elements.append(Spacer(1, 20))
+
+    # 2️⃣ Título da recomendação (concept)
+    elements.append(
+        Paragraph(item["concept"], settings_style_map["h3"])
+    )
+    elements.append(Spacer(1, 20))
+
+    # 3️⃣ Texto HTML da recomendação
+    html_content = item["recommendations"]
+
+    # Aqui você chama SUA FUNÇÃO que limpa e converte HTML
+    flowables = build_flowables_from_html(
+        html_content,
+        settings_style_map,
+        settings_list_map
+    )
+
+    for flowable in flowables:
+        elements.append(flowable)
+
+    elements.append(Spacer(1, 20))
 
 
 
