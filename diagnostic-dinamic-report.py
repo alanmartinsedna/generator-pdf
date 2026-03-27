@@ -1098,13 +1098,13 @@ for item in result_recommendation_list:
     elements.append(
         Paragraph(item["label"], settings_style_map["h2"])
     )
-    elements.append(Spacer(1, 20))
+    elements.append(Spacer(1, 10))
 
     # 2️⃣ Título da recomendação (concept)
     elements.append(
         Paragraph(item["concept"], settings_style_map["h3"])
     )
-    elements.append(Spacer(1, 20))
+    elements.append(Spacer(1, 10))
 
     # 3️⃣ Texto HTML da recomendação
     html_content = item["recommendations"]
@@ -1119,7 +1119,7 @@ for item in result_recommendation_list:
     for flowable in flowables:
         elements.append(flowable)
 
-    elements.append(Spacer(1, 20))
+    elements.append(Spacer(1, 10))
 
 
 
