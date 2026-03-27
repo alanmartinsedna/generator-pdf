@@ -669,6 +669,151 @@ def calc_global_average_question_group(json_data):
 
     return result_list
 
+# ===============================================
+# CONFIGURAÇÃO DE ESTILO DE TEXTO BASEADO NO HTML
+# ===============================================
+# =========================
+# TAGS DE BLOCO
+# =========================
+settings_style_map = {
+
+    # =========================
+    # HEADINGS
+    # =========================
+
+    "h1": ParagraphStyle(
+        name="H1",
+        parent=styles["Normal"],
+        fontName="Helvetica-Bold",
+        fontSize=24,
+        leading=28.8,
+        spaceAfter=12,
+        spaceBefore=6,
+    ),
+
+    "h2": ParagraphStyle(
+        name="H2",
+        parent=styles["Normal"],
+        fontName="Helvetica-Bold",
+        fontSize=18,
+        leading=21.6,
+        spaceAfter=9,
+        spaceBefore=6,
+    ),
+
+    "h3": ParagraphStyle(
+        name="H3",
+        parent=styles["Normal"],
+        fontName="Helvetica-Bold",
+        fontSize=14,
+        leading=16.8,
+        spaceAfter=7,
+        spaceBefore=5,
+    ),
+
+    "h4": ParagraphStyle(
+        name="H4",
+        parent=styles["Normal"],
+        fontName="Helvetica-Bold",
+        fontSize=12,
+        leading=14.4,
+        spaceAfter=6,
+        spaceBefore=4,
+    ),
+
+    "h5": ParagraphStyle(
+        name="H5",
+        parent=styles["Normal"],
+        fontName="Helvetica-Bold",
+        fontSize=10,
+        leading=12,
+        spaceAfter=5,
+        spaceBefore=4,
+    ),
+
+    "h6": ParagraphStyle(
+        name="H6",
+        parent=styles["Normal"],
+        fontName="Helvetica-Bold",
+        fontSize=9,
+        leading=10.8,
+        spaceAfter=4,
+        spaceBefore=3,
+    ),
+
+    # =========================
+    # PARAGRAPH
+    # =========================
+
+    "p": ParagraphStyle(
+        name="P",
+        parent=styles["Normal"],
+        fontName="Helvetica",
+        fontSize=12,
+        leading=14.4,
+        spaceAfter=6,
+    ),
+
+    # =========================
+    # BLOCKQUOTE
+    # =========================
+
+    "blockquote": ParagraphStyle(
+        name="BLOCKQUOTE",
+        parent=styles["Normal"],
+        fontName="Helvetica-Oblique",
+        fontSize=12,
+        leading=14.4,
+        leftIndent=20,
+        textColor=colors.grey,
+        spaceAfter=6,
+        spaceBefore=6,
+    ),
+
+    # =========================
+    # ADDRESS
+    # =========================
+
+    "address": ParagraphStyle(
+        name="ADDRESS",
+        parent=styles["Normal"],
+        fontName="Helvetica-Oblique",
+        fontSize=12,
+        leading=14.4,
+        spaceAfter=6,
+    ),
+}
+
+# =========================
+# TAGS PARA LISTAS
+# =========================
+
+settings_list_map = {
+
+    "ul": {
+        "bulletType": "bullet",
+        "leftIndent": 20,
+        "bulletFontName": "Helvetica",
+        "bulletFontSize": 12,
+    },
+
+    "ol": {
+        "bulletType": "1",  # numerada
+        "leftIndent": 20,
+        "bulletFontName": "Helvetica",
+        "bulletFontSize": 12,
+    },
+
+    "li_style": ParagraphStyle(
+        name="LI",
+        parent=styles["Normal"],
+        fontName="Helvetica",
+        fontSize=12,
+        leading=14.4,
+        spaceAfter=3,
+    )
+}
+
 # =========================
 # CONTEÚDO DINÂMICO
 # =========================
