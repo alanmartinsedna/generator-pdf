@@ -1,4 +1,4 @@
-from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, Paragraph, Table, TableStyle, Spacer, Flowable, ListFlowable, ListItem
+from reportlab.platypus import BaseDocTemplate, Frame, Indenter, PageTemplate, Paragraph, Table, TableStyle, Spacer, Flowable, ListFlowable, ListItem
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -958,6 +958,11 @@ def build_flowables_from_html(html_content, settings_style_map, settings_list_ma
             elif tag in ["ul", "ol"] and self.list_items:
 
                 list_config = settings_list_map.get(tag, {})
+                LIST_MARGIM_LEFT = 15
+                
+                flowables.append(
+                    Indenter(left=LIST_MARGIM_LEFT)   # empurra todo o bloco da lista, inclusive bullets
+                )
 
                 flowables.append(
                     ListFlowable(
@@ -967,6 +972,10 @@ def build_flowables_from_html(html_content, settings_style_map, settings_list_ma
                         bulletFontName=list_config.get("bulletFontName", "Helvetica"),
                         bulletFontSize=list_config.get("bulletFontSize", 12),
                     )
+                )
+                                
+                flowables.append(
+                    Indenter(left= -LIST_MARGIM_LEFT)  # volta o contexto após a lista
                 )
 
                 flowables.append(Spacer(1, 0.3 * cm))
