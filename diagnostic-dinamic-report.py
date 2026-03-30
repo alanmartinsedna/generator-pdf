@@ -787,13 +787,13 @@ settings_list_map = {
 
     "ul": {
         "bulletType": "bullet",
-        "leftIndent": 20,
+        "leftIndent": 10,
         "bulletFontName": "Helvetica",
         "bulletFontSize": 12,
     },
     "ol": {
         "bulletType": "1",  # numerada
-        "leftIndent": 20,
+        "leftIndent": 10,
         "bulletFontName": "Helvetica",
         "bulletFontSize": 12,
     },
