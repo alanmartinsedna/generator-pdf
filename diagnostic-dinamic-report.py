@@ -847,6 +847,110 @@ def get_recommendation_by_score(data_json, average_questions_groups_list):
 # FUNÇÃO DE LIMPEZA DE HTML E FORMATAÇÃO DE TEXTO
 # =========================
 
+# def build_flowables_from_html(html_content, settings_style_map, settings_list_map):
+
+#     from reportlab.platypus import Paragraph, Spacer, ListFlowable, ListItem
+#     from reportlab.lib.units import cm
+#     import html as html_lib
+#     import re
+
+#     flowables = []
+
+#     if not html_content:
+#         return flowables
+
+#     # 1️⃣ Decode entidades HTML
+#     html_content = html_lib.unescape(html_content)
+
+#     # 2️⃣ REMOVE TODOS OS ATRIBUTOS DE TODAS AS TAGS
+#     # Mantém a tag, remove qualquer coisa dentro dela
+#     html_content = re.sub(r'<(\w+)(\s+[^>]+)>', r'<\1>', html_content)
+
+#     # 3️⃣ Remove tags vazias desnecessárias tipo <span></span>
+#     html_content = re.sub(r'<span>\s*</span>', '', html_content, flags=re.IGNORECASE)
+
+#     # 4️⃣ Extrai blocos principais
+#     block_pattern = re.compile(
+#         r'<(p|h1|h2|h3|h4|h5|h6|ul|ol|blockquote|address)>(.*?)</\1>',
+#         re.IGNORECASE | re.DOTALL
+#     )
+
+#     blocks = block_pattern.findall(html_content)
+
+#     for tag_name, inner_html in blocks:
+
+#         tag_name = tag_name.lower().strip()
+#         inner_html = inner_html.strip()
+
+#         if not inner_html:
+#             continue
+
+#         # =========================
+#         # LISTAS
+#         # =========================
+#         if tag_name in ["ul", "ol"]:
+
+#             li_pattern = re.compile(
+#                 r'<li>(.*?)</li>',
+#                 re.IGNORECASE | re.DOTALL
+#             )
+
+#             li_items = li_pattern.findall(inner_html)
+#             list_items = []
+
+#             for li_html in li_items:
+#                 li_html = li_html.strip()
+#                 if not li_html:
+#                     continue
+
+#                 li_paragraph = Paragraph(
+#                     li_html,
+#                     settings_list_map["li_style"]
+#                 )
+
+#                 list_items.append(ListItem(li_paragraph))
+
+#             if list_items:
+
+#                 list_config = settings_list_map.get(tag_name, {})
+
+#                 LIST_MARGIM_LEFT = 15
+
+#                 flowables.append(
+#                     Indenter(left=LIST_MARGIM_LEFT)   # empurra todo o bloco da lista, inclusive bullets
+#                 )
+
+#                 flowables.append(
+#                     ListFlowable(
+#                         list_items,
+#                         bulletType=list_config.get("bulletType", "bullet"),
+#                         leftIndent=list_config.get("leftIndent", 10),
+#                         bulletFontName=list_config.get("bulletFontName", "Helvetica"),
+#                         bulletFontSize=list_config.get("bulletFontSize", 12),
+#                     )
+#                 )
+
+#                 flowables.append(
+#                     Indenter(left= -LIST_MARGIM_LEFT)  # volta o contexto após a lista
+#                 )
+
+#                 flowables.append(Spacer(1, 0.3 * cm))
+
+#         # =========================
+#         # BLOCOS NORMAIS
+#         # =========================
+#         else:
+
+#             style = settings_style_map.get(tag_name, settings_style_map["p"])
+
+#             flowables.append(
+#                 Paragraph(inner_html, style)
+#             )
+
+#             flowables.append(Spacer(1, 0.2 * cm))
+
+#     return flowables
+
 def build_flowables_from_html(html_content, settings_style_map, settings_list_map):
 
     from reportlab.platypus import Paragraph, Spacer, ListFlowable, ListItem
@@ -859,17 +963,41 @@ def build_flowables_from_html(html_content, settings_style_map, settings_list_ma
     if not html_content:
         return flowables
 
-    # 1️⃣ Decode entidades HTML
+    # =====================================================
+    # 1️⃣ Decode entidades HTML (&Aacute; etc)
+    # =====================================================
     html_content = html_lib.unescape(html_content)
 
-    # 2️⃣ REMOVE TODOS OS ATRIBUTOS DE TODAS AS TAGS
-    # Mantém a tag, remove qualquer coisa dentro dela
+    # =====================================================
+    # 2️⃣ Remove quebras de linha desnecessárias
+    # =====================================================
+    html_content = html_content.replace("\n", "")
+
+    # =====================================================
+    # 3️⃣ Remove TODOS atributos de QUALQUER tag
+    # =====================================================
     html_content = re.sub(r'<(\w+)(\s+[^>]+)>', r'<\1>', html_content)
 
-    # 3️⃣ Remove tags vazias desnecessárias tipo <span></span>
-    html_content = re.sub(r'<span>\s*</span>', '', html_content, flags=re.IGNORECASE)
+    # =====================================================
+    # 4️⃣ Converte strong → b (mais seguro no ReportLab)
+    # =====================================================
+    html_content = re.sub(r'<strong>', '<b>', html_content, flags=re.IGNORECASE)
+    html_content = re.sub(r'</strong>', '</b>', html_content, flags=re.IGNORECASE)
 
-    # 4️⃣ Extrai blocos principais
+    # =====================================================
+    # 5️⃣ Remove COMPLETAMENTE spans (não servem no ReportLab)
+    # =====================================================
+    html_content = re.sub(r'</?span>', '', html_content, flags=re.IGNORECASE)
+
+    # =====================================================
+    # 6️⃣ Remove <p> aninhado
+    # =====================================================
+    html_content = re.sub(r'<p>\s*<p>', '<p>', html_content, flags=re.IGNORECASE)
+    html_content = re.sub(r'</p>\s*</p>', '</p>', html_content, flags=re.IGNORECASE)
+
+    # =====================================================
+    # 7️⃣ Regex para blocos principais
+    # =====================================================
     block_pattern = re.compile(
         r'<(p|h1|h2|h3|h4|h5|h6|ul|ol|blockquote|address)>(.*?)</\1>',
         re.IGNORECASE | re.DOTALL
@@ -885,9 +1013,9 @@ def build_flowables_from_html(html_content, settings_style_map, settings_list_ma
         if not inner_html:
             continue
 
-        # =========================
+        # =====================================================
         # LISTAS
-        # =========================
+        # =====================================================
         if tag_name in ["ul", "ol"]:
 
             li_pattern = re.compile(
@@ -899,7 +1027,9 @@ def build_flowables_from_html(html_content, settings_style_map, settings_list_ma
             list_items = []
 
             for li_html in li_items:
+
                 li_html = li_html.strip()
+
                 if not li_html:
                     continue
 
@@ -936,9 +1066,9 @@ def build_flowables_from_html(html_content, settings_style_map, settings_list_ma
 
                 flowables.append(Spacer(1, 0.3 * cm))
 
-        # =========================
+        # =====================================================
         # BLOCOS NORMAIS
-        # =========================
+        # =====================================================
         else:
 
             style = settings_style_map.get(tag_name, settings_style_map["p"])
