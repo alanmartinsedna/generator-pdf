@@ -12,7 +12,8 @@ def load_json(caminho):
     with open(caminho, "r", encoding="utf-8") as f:
         return json.load(f)
     
-data_json = load_json("data-v2.json")
+# data_json = load_json("data-v2.json")
+data_json = load_json("data-cenario-01.json")
 
 # =========================
 # CONSTANTES
@@ -535,20 +536,20 @@ class ScoreCard(Flowable):
         if self.value > 100:
             raise Exception("Erro: percentual acima de 100%")
         elif 0 <= self.value <= 20:
-            bg = "#ee3650"
-            label = "Muito Ruim"
+            bg = "#2f6e2d"
+            label = "Excelente"
         elif self.value <= 40:
-            bg = "#f4b184"
-            label = "Ruim"
+            bg = "#c3dfa5"
+            label = "Bom"
         elif self.value <= 60:
             bg = "#ffd656"
             label = "Razoável"
         elif self.value <= 80:
-            bg = "#c3dfa5"
-            label = "Bom"
+            bg = "#f4b184"
+            label = "Ruim"
         elif self.value <= 100:
-            bg = "#2f6e2d"
-            label = "Excelente"
+            bg = "#ee3650"
+            label = "Muito Ruim"
         else:
             bg = "#adadad"
             label = "n/d"
