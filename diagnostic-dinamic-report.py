@@ -735,11 +735,6 @@ settings_style_map = {
         spaceAfter=4,
         spaceBefore=3,
     ),
-
-    # =========================
-    # PARAGRAPH
-    # =========================
-
     "p": ParagraphStyle(
         name="P",
         parent=styles["Normal"],
@@ -748,11 +743,6 @@ settings_style_map = {
         leading=14.4,
         spaceAfter=6,
     ),
-
-    # =========================
-    # BLOCKQUOTE
-    # =========================
-
     "blockquote": ParagraphStyle(
         name="BLOCKQUOTE",
         parent=styles["Normal"],
@@ -764,11 +754,6 @@ settings_style_map = {
         spaceAfter=6,
         spaceBefore=6,
     ),
-
-    # =========================
-    # ADDRESS
-    # =========================
-
     "address": ParagraphStyle(
         name="ADDRESS",
         parent=styles["Normal"],
@@ -776,7 +761,7 @@ settings_style_map = {
         fontSize=12,
         leading=14.4,
         spaceAfter=6,
-    ),
+    )
 }
 
 # =========================
@@ -862,133 +847,214 @@ def get_recommendation_by_score(data_json, average_questions_groups_list):
 # FUNÇÃO DE LIMPEZA DE HTML E FORMATAÇÃO DE TEXTO
 # =========================
 
+# def build_flowables_from_html(html_content, settings_style_map, settings_list_map):
+
+#     from reportlab.platypus import Paragraph, Spacer, ListFlowable, ListItem, Indenter
+#     from reportlab.lib.units import cm
+#     import html as html_lib
+#     import re
+
+#     flowables = []
+
+#     if not html_content:
+#         return flowables
+
+#     # =========================
+#     # 1️⃣ Decodifica entidades HTML
+#     # =========================
+#     html_content = html_lib.unescape(html_content)
+
+#     # =========================
+#     # 2️⃣ REMOVE TAGS <span> mas mantém conteúdo interno
+#     # =========================
+#     html_content = re.sub(r'</?span[^>]*>', '', html_content, flags=re.IGNORECASE)
+
+#     # =========================
+#     # 3️⃣ REMOVE atributos style="" e class=""
+#     # =========================
+#     html_content = re.sub(r'\sstyle="[^"]*"', '', html_content, flags=re.IGNORECASE)
+#     html_content = re.sub(r"\sstyle='[^']*'", '', html_content, flags=re.IGNORECASE)
+#     html_content = re.sub(r'\sclass="[^"]*"', '', html_content, flags=re.IGNORECASE)
+#     html_content = re.sub(r"\sclass='[^']*'", '', html_content, flags=re.IGNORECASE)
+
+#     # =========================
+#     # 4️⃣ QUEBRA POR BLOCOS (p, h1-h6, ul, ol)
+#     # =========================
+#     block_pattern = re.compile(
+#         r'<(p|h1|h2|h3|h4|h5|h6|ul|ol)[^>]*>(.*?)</\1>',
+#         re.IGNORECASE | re.DOTALL
+#     )
+
+#     blocks = block_pattern.findall(html_content)
+
+#     for tag_name, inner_html in blocks:
+
+#         tag_name = tag_name.lower().strip()
+#         inner_html = inner_html.strip()
+
+#         if not inner_html:
+#             continue
+
+#         # =========================
+#         # LISTAS
+#         # =========================
+#         if tag_name in ["ul", "ol"]:
+
+#             li_pattern = re.compile(r'<li[^>]*>(.*?)</li>', re.IGNORECASE | re.DOTALL)
+#             li_items = li_pattern.findall(inner_html)
+
+#             list_items = []
+
+#             for li_html in li_items:
+
+#                 li_html = li_html.strip()
+#                 if not li_html:
+#                     continue
+
+#                 li_paragraph = Paragraph(
+#                     li_html,
+#                     settings_list_map["li_style"]
+#                 )
+
+#                 list_items.append(ListItem(li_paragraph))
+
+#             if list_items:
+
+#                 list_config = settings_list_map.get(tag_name, {})
+
+#                 LIST_MARGIN_LEFT = 15
+
+#                 flowables.append(Indenter(left=LIST_MARGIN_LEFT))
+
+#                 flowables.append(
+#                     ListFlowable(
+#                         list_items,
+#                         bulletType=list_config.get("bulletType", "bullet"),
+#                         leftIndent=list_config.get("leftIndent", 10),
+#                         bulletFontName=list_config.get("bulletFontName", "Helvetica"),
+#                         bulletFontSize=list_config.get("bulletFontSize", 12),
+#                     )
+#                 )
+
+#                 flowables.append(Indenter(left=-LIST_MARGIN_LEFT))
+#                 flowables.append(Spacer(1, 0.3 * cm))
+
+#         # =========================
+#         # PARÁGRAFOS E HEADINGS
+#         # =========================
+#         else:
+
+#             style = settings_style_map.get(tag_name, settings_style_map["p"])
+
+#             flowables.append(
+#                 Paragraph(inner_html, style)
+#             )
+
+#             flowables.append(Spacer(1, 0.2 * cm))
+
+#     return flowables
+
 def build_flowables_from_html(html_content, settings_style_map, settings_list_map):
 
     from reportlab.platypus import Paragraph, Spacer, ListFlowable, ListItem
     from reportlab.lib.units import cm
-    from html.parser import HTMLParser
     import html as html_lib
+    import re
 
     flowables = []
 
     if not html_content:
         return flowables
 
-    # =========================
-    # 1️⃣ Decodifica entidades HTML
-    # =========================
+    # 1️⃣ Decode entidades HTML
     html_content = html_lib.unescape(html_content)
 
-    # =========================
-    # Parser customizado
-    # =========================
-    class SimpleHTMLParser(HTMLParser):
+    # 2️⃣ REMOVE TODOS OS ATRIBUTOS DE TODAS AS TAGS
+    # Mantém a tag, remove qualquer coisa dentro dela
+    html_content = re.sub(r'<(\w+)(\s+[^>]+)>', r'<\1>', html_content)
 
-        def __init__(self):
-            super().__init__()
-            self.current_tag = None
-            self.current_data = ""
-            self.list_stack = []
-            self.list_items = []
-            self.capture_li = False
+    # 3️⃣ Remove tags vazias desnecessárias tipo <span></span>
+    html_content = re.sub(r'<span>\s*</span>', '', html_content, flags=re.IGNORECASE)
 
-        # =========================
-        # TAG ABERTA
-        # =========================
-        def handle_starttag(self, tag, attrs):
-            tag = tag.lower()
+    # 4️⃣ Extrai blocos principais
+    block_pattern = re.compile(
+        r'<(p|h1|h2|h3|h4|h5|h6|ul|ol|blockquote|address)>(.*?)</\1>',
+        re.IGNORECASE | re.DOTALL
+    )
 
-            if tag in settings_style_map:
-                self.current_tag = tag
-                self.current_data = ""
+    blocks = block_pattern.findall(html_content)
 
-            elif tag in ["ul", "ol"]:
-                self.list_stack.append(tag)
-                self.list_items = []
+    for tag_name, inner_html in blocks:
 
-            elif tag == "li":
-                self.capture_li = True
-                self.current_data = ""
+        tag_name = tag_name.lower().strip()
+        inner_html = inner_html.strip()
+
+        if not inner_html:
+            continue
 
         # =========================
-        # TEXTO
+        # LISTAS
         # =========================
-        def handle_data(self, data):
-            if self.current_tag or self.capture_li:
-                self.current_data += data
+        if tag_name in ["ul", "ol"]:
 
-        # =========================
-        # TAG FECHADA
-        # =========================
-        def handle_endtag(self, tag):
-            tag = tag.lower()
+            li_pattern = re.compile(
+                r'<li>(.*?)</li>',
+                re.IGNORECASE | re.DOTALL
+            )
 
-            # =========================
-            # FINALIZA PARÁGRAFOS / HEADINGS
-            # =========================
-            if tag == self.current_tag and self.current_data.strip():
+            li_items = li_pattern.findall(inner_html)
+            list_items = []
 
-                style = settings_style_map.get(tag, settings_style_map.get("p"))
-                flowables.append(Paragraph(self.current_data.strip(), style))
-                flowables.append(Spacer(1, 0.2 * cm))
+            for li_html in li_items:
+                li_html = li_html.strip()
+                if not li_html:
+                    continue
 
-                self.current_tag = None
-                self.current_data = ""
+                li_paragraph = Paragraph(
+                    li_html,
+                    settings_list_map["li_style"]
+                )
 
-            # =========================
-            # FINALIZA ITEM DE LISTA
-            # =========================
-            elif tag == "li" and self.capture_li:
+                list_items.append(ListItem(li_paragraph))
 
-                text = self.current_data.strip()
+            if list_items:
 
-                if text:
-                    li_paragraph = Paragraph(
-                        text,
-                        settings_list_map["li_style"]
-                    )
-                    self.list_items.append(ListItem(li_paragraph))
+                list_config = settings_list_map.get(tag_name, {})
 
-                self.capture_li = False
-                self.current_data = ""
-
-            # =========================
-            # FINALIZA LISTA
-            # =========================
-            elif tag in ["ul", "ol"] and self.list_items:
-
-                list_config = settings_list_map.get(tag, {})
                 LIST_MARGIM_LEFT = 15
-                
+
                 flowables.append(
                     Indenter(left=LIST_MARGIM_LEFT)   # empurra todo o bloco da lista, inclusive bullets
                 )
 
                 flowables.append(
                     ListFlowable(
-                        self.list_items,
+                        list_items,
                         bulletType=list_config.get("bulletType", "bullet"),
-                        leftIndent=list_config.get("leftIndent", 20),
+                        leftIndent=list_config.get("leftIndent", 10),
                         bulletFontName=list_config.get("bulletFontName", "Helvetica"),
                         bulletFontSize=list_config.get("bulletFontSize", 12),
                     )
                 )
-                                
+
                 flowables.append(
                     Indenter(left= -LIST_MARGIM_LEFT)  # volta o contexto após a lista
                 )
 
                 flowables.append(Spacer(1, 0.3 * cm))
 
-                self.list_items = []
-                if self.list_stack:
-                    self.list_stack.pop()
+        # =========================
+        # BLOCOS NORMAIS
+        # =========================
+        else:
 
-    # =========================
-    # Executa Parser
-    # =========================
-    parser = SimpleHTMLParser()
-    parser.feed(html_content)
+            style = settings_style_map.get(tag_name, settings_style_map["p"])
+
+            flowables.append(
+                Paragraph(inner_html, style)
+            )
+
+            flowables.append(Spacer(1, 0.2 * cm))
 
     return flowables
 
@@ -1130,7 +1196,7 @@ for item in result_recommendation_list:
 
     elements.append(Spacer(1, 10))
 
-
+elements.append(Spacer(1, 40))
 
 
 # "------------⬆️-------- FIM DO BLOCO PARA CONTEUDO DO RELATORIO -------⬆️------------"
