@@ -5,58 +5,6 @@
       "economicGroupId": "818c0e5f-e838-41db-b2f1-4b1282b2daf1",
       "public_groups": [
         {
-          "groupName": "COLABORADORES",
-          "peopleGroup": {
-            "groupId": "868ea1bf-4d5b-4a9d-bc20-9ad6627ccc28",
-            "totalPeople": 120,
-            "answered": 95,
-            "notAnswered": 25,
-            "avarageGroup": 1.0
-          },
-          "answersGroupName": [
-            {
-              "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
-              "groupNameId": "d72dff11-f890-4582-8caf-3ce02d16c899",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
-              "groupNameId": "7b154e38-5806-4e0f-abea-0b52976ca490",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "3. SUPORTE E RECURSOS",
-              "groupNameId": "e6b2e6d8-1b8f-4c44-a419-3e6c43342baa",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
-              "groupNameId": "938bb789-0b07-4a1b-9d6c-f8b973307030",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "5. CLAREZA E ESTRUTURA DE PAPÉIS",
-              "groupNameId": "11801cd6-7b0e-48e9-88b1-2fdd6ed2dd9c",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "6. GESTÃO DE MUDANÇAS",
-              "groupNameId": "58fadb17-a9db-43ac-815e-4d9cfdd67a2f",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "7. JUSTICA E COERÊNCIA ORGANIZACIONAL",
-              "groupNameId": "c3e9299c-3fc6-42c0-b1d6-d16ebb2f6520",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "8. SEGURANÇA ORGANIZACIONAL E PSICOLÓGICA",
-              "groupNameId": "97f40760-bbfc-45ab-a109-3a4fc8611ba2",
-              "finalAverage": 1.0
-            }
-          ]
-        },
-        {
           "groupName": "OPERACIONAL",
           "peopleGroup": {
             "groupId": "caf05787-abad-4bd3-b6f8-a9fcb8ccf823",
@@ -84,58 +32,6 @@
             {
               "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
               "groupNameId": "2ede73c8-09f2-4b03-af5d-481f21a16e20",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "5. CLAREZA E ESTRUTURA DE PAPÉIS",
-              "groupNameId": "11801cd6-7b0e-48e9-88b1-2fdd6ed2dd9c",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "6. GESTÃO DE MUDANÇAS",
-              "groupNameId": "58fadb17-a9db-43ac-815e-4d9cfdd67a2f",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "7. JUSTICA E COERÊNCIA ORGANIZACIONAL",
-              "groupNameId": "c3e9299c-3fc6-42c0-b1d6-d16ebb2f6520",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "8. SEGURANÇA ORGANIZACIONAL E PSICOLÓGICA",
-              "groupNameId": "97f40760-bbfc-45ab-a109-3a4fc8611ba2",
-              "finalAverage": 1.0
-            }
-          ]
-        },
-        {
-          "groupName": "TI",
-          "peopleGroup": {
-            "groupId": "e6ed6173-0d86-4619-9ffe-c5ec4e921b28",
-            "totalPeople": 33,
-            "answered": 5,
-            "notAnswered": 28,
-            "avarageGroup": 1.0
-          },
-          "answersGroupName": [
-            {
-              "groupNameAnswer": "1. ORGANIZAÇÃO DAS DEMANDAS",
-              "groupNameId": "7023fd98-6ba4-4402-90b2-0ce816133ce1",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "2. AUTONOMIA E CAPACIDADE DE EXECUÇÃO",
-              "groupNameId": "9d7d7484-0d52-4e3f-afe0-0007ec95ab17",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "3. SUPORTE E RECURSOS",
-              "groupNameId": "6db3c56b-7adf-444a-b378-f53270f059bc",
-              "finalAverage": 1.0
-            },
-            {
-              "groupNameAnswer": "4. RELAÇÕES PROFISSIONAIS",
-              "groupNameId": "53cb25f9-8408-420b-8aa9-3b15fbd778d1",
               "finalAverage": 1.0
             },
             {
