@@ -12,8 +12,15 @@ def load_json(caminho):
     with open(caminho, "r", encoding="utf-8") as f:
         return json.load(f)
     
-# data_json = load_json("data-v2.json")
-data_json = load_json("data-cenario-01.json")
+# file_name = "data-cenario-01.json"
+# file_name = "data-cenario-02.json"
+# file_name = "data-cenario-03.json"
+# file_name = "data-cenario-05.json"
+file_name = "data-cenario-04.json"
+
+data_json = load_json(file_name)
+# Remove a extensão .json
+formated_file_name = file_name.replace(".json", "")
 
 # =========================
 # CONSTANTES
@@ -179,8 +186,10 @@ def draw_header_footer(canvas, doc):
 # DOCUMENTO BASE
 # =========================
 
+pdf_file_name = f"./pdf-files/Diagnóstico de Riscos Psicossociais - {formated_file_name}.pdf"
+
 doc = BaseDocTemplate(
-    "./pdf-files/Diagnóstico de Riscos Psicossociais.pdf",
+    pdf_file_name,
     pagesize=A4
 )
 
