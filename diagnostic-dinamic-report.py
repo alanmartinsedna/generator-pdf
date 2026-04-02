@@ -1,8 +1,13 @@
+from pprint import pprint
+
 from reportlab.platypus import BaseDocTemplate, Frame, Indenter, PageTemplate, Paragraph, Table, TableStyle, Spacer, Flowable, ListFlowable, ListItem
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 import json
+from reportlab.graphics.shapes import Drawing
+from reportlab.graphics.charts.piecharts import Pie
+from reportlab.graphics.charts.legends import Legend
 
 # =========================
 # CARREGAR DADOS
@@ -15,8 +20,8 @@ def load_json(caminho):
 # file_name = "data-cenario-01.json"
 # file_name = "data-cenario-02.json"
 # file_name = "data-cenario-03.json"
-# file_name = "data-cenario-05.json"
-file_name = "data-cenario-04.json"
+# file_name = "data-cenario-04.json"
+file_name = "data-cenario-05.json"
 
 data_json = load_json(file_name)
 # Remove a extensão .json
@@ -471,6 +476,101 @@ def criar_tabela_publico(json_data, table_width):
     ]))
 
     return table
+
+# ===============================================================================================
+
+def create_donut_chart(data, labels):
+    class DonutChartWithLegend(Flowable):
+
+        def __init__(self, data, labels):
+            super().__init__()
+            self.data = data
+            self.labels = labels
+
+            self.max_chart_size = 150
+            self.space_between = 20
+
+            self.drawing = None
+
+
+        def wrap(self, availWidth, availHeight):
+            """
+            availWidth = largura real do FRAME
+            """
+
+            chart_size = min(self.max_chart_size, availWidth * 0.5)
+
+            # Cria Drawing com largura do frame
+            drawing = Drawing(availWidth, chart_size)
+
+            # ---------------- PIE ----------------
+            pie = Pie()
+            pie.width = chart_size
+            pie.height = chart_size
+            pie.data = self.data
+            pie.labels = None
+            pie.innerRadiusFraction = 0.6
+
+            base_colors = [
+                colors.HexColor("#2E7D32"),
+                colors.HexColor("#1565C0"),
+                colors.HexColor("#EF6C00"),
+                colors.HexColor("#C62828"),
+                colors.HexColor("#6A1B9A"),
+                colors.HexColor("#00838F"),
+            ]
+
+            for i in range(len(self.data)):
+                pie.slices[i].fillColor = base_colors[i % len(base_colors)]
+
+            # ---------------- LEGEND ----------------
+            legend = Legend()
+            legend.dx = 12
+            legend.dy = 12
+            legend.fontName = "Helvetica"
+            legend.fontSize = 7
+            legend.boxAnchor = "nw"
+            legend.columnMaximum = len(self.labels)
+
+            legend.colorNamePairs = [
+                (pie.slices[i].fillColor, self.labels[i])
+                for i in range(len(self.labels))
+            ]
+
+            # 🔥 ESTIMATIVA REALISTA DA LARGURA DA LEGENDA
+            legend_width = 120  # largura segura
+            total_block_width = chart_size + self.space_between + legend_width
+
+            # 🔥 CENTRALIZA NO FRAME
+            x_offset = (availWidth - total_block_width) / 2
+
+            # Posicionamento
+            pie.x = x_offset
+            pie.y = 0
+
+            legend.x = x_offset + chart_size + self.space_between
+            legend.y = chart_size - 10
+
+            drawing.add(pie)
+            drawing.add(legend)
+
+            self.drawing = drawing
+
+            self.width = availWidth
+            self.height = chart_size
+
+            return self.width, self.height
+
+
+        def draw(self):
+            self.drawing.drawOn(self.canv, 0, 0)
+
+
+    return DonutChartWithLegend(data, labels)
+
+# ===============================================================================================
+
+
 
 # =========================
 # FUNÇÃO CALCULO MEDIA GERAL DE ADERENCIA
@@ -1081,6 +1181,34 @@ elements.append(
     )
 )
 elements.append(Spacer(1, 20))
+
+
+# 🔥 Extrai dados da tabela
+labels_groups = []
+data_groups = []
+
+# ignora a primeira linha (cabeçalho)
+for row in table._cellvalues[1:]:
+    group_name = row[0]           # Nome do grupo
+    responded = int(row[2])       # Coluna "Respondidas"
+
+    labels_groups.append(group_name)
+    data_groups.append(responded)
+
+    items_labels_groups = len(labels_groups)
+    items_data_groups = len(data_groups)
+
+print(f'items_labels_groups = {items_labels_groups}')
+print(f'items_data_groups = {items_data_groups}')
+
+if items_labels_groups == items_data_groups and items_labels_groups > 1 and items_data_groups > 1:
+    elements.append(
+        create_donut_chart(
+            data=data_groups,
+            labels=labels_groups
+        )
+    )
+    elements.append(Spacer(1, 20))
 elements.append(
     Table(
         [[ScoreCard(total_global_avarage_diagnostic_number, total_global_avarage_diagnostic_str)]],
