@@ -477,7 +477,9 @@ def criar_tabela_publico(json_data, table_width):
 
     return table
 
-# ===============================================================================================
+# =====================================================================
+# FUNÇÃO CRIAÇÃO GRÁFICO DE ROSCA (DONUT CHART) COM LEGENDAS DINÂMICAS
+# =====================================================================
 
 def create_donut_chart(data, labels):
     class DonutChartWithLegend(Flowable):
@@ -567,10 +569,6 @@ def create_donut_chart(data, labels):
 
 
     return DonutChartWithLegend(data, labels)
-
-# ===============================================================================================
-
-
 
 # =========================
 # FUNÇÃO CALCULO MEDIA GERAL DE ADERENCIA
